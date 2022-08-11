@@ -83,7 +83,7 @@ async def download(bot, update):
             )
             return False
     if os.path.exists(download_directory):
-        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.chat.id) + ".json"
+        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.message.chat.id) + ".json"
         if os.path.exists(save_ytdl_json_path):
             os.remove(save_ytdl_json_path)
         end_one = datetime.now()
