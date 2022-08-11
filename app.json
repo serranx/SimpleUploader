@@ -17,52 +17,45 @@
   "success_url": "https://t.me/SimpleUploaderBot",
   "website": "https://github.com/wywxz",
   "repository": "https://github.com/wywxz/SimpleUploaderBot",
-
   "env": {
     "WEBHOOK": {
       "description": "Setting this to ANYTHING will enable webhooks when in env mode",
       "value": "ANYTHING"
     },
-
     "BOT_TOKEN": {
       "description": "Your bot token, as a string.",
-      "value": ""
+      "value": "5155024757:AAF2gS5caeQhFA55WvwWuFBigvAYFf-s6i4"
     },
-
     "API_ID": {
       "description": "Get this value from https://my.telegram.org",
-      "value": ""
+      "value": "8568636"
     },
-
     "API_HASH": {
       "description": "Get this value from https://my.telegram.org",
-      "value": ""
+      "value": "91c94f4b9e8d25e4b0dded1c51d8deb4"
     },
-
     "OWNER_ID": {
       "description": "Your Telegram ID",
-      "value": ""
+      "value": "702821299"
     },
-    
     "DATABASE_URL": {
       "description": "Your MongoDB URI",
-      "value": ""
+      "value": "mongodb+srv://serralex9:alex980925.S@cluster0.atljc.mongodb.net/?retryWrites=true&w=majority"
     }
-
   },
-
-  "addons": [ ],
+  "addons": [],
   "buildpacks": [
-  {
-    "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
-  },
-  {
-    "url": "heroku/python"
-  }],
+    {
+      "url": "https:/github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
   "formation": {
-     "worker": {
-       "quantity": 1,
-       "size": "free"
-     }
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
   }
 }
