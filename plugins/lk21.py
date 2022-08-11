@@ -12,6 +12,7 @@ from database.adduser import AddUser
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from . import googledrive
 from . import mediafire
 from . import fembed
 #from . import dl_button
