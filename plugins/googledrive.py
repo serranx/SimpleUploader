@@ -50,9 +50,6 @@ async def get(bot, update, url):
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
         response_json = json.loads(x_reponse)
-        response_json["formats"][-1].append({
-            "title": response_json["title"]
-        })
         response_json = response_json["formats"][-1]
         return response_json
         
