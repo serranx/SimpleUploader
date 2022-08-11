@@ -8,7 +8,7 @@ class Config(object):
     API_HASH = os.environ.get("API_HASH")
     # Get these values from my.telegram.org
     # the download location, where the HTTP Server runs
-    DOWNLOAD_LOCATION = "./DOWNLOADS"
+    DOWNLOAD_LOCATION = "./DOWNLOADS/"
     # Telegram maximum file upload size
     MAX_FILE_SIZE = 50000000
     TG_MAX_FILE_SIZE = 2097152000
