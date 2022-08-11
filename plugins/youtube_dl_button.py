@@ -39,10 +39,6 @@ async def youtube_dl_call_back(bot, update):
             revoke=True
         )
         return False
-    await bot.send_document(
-        chat_id=update.message.chat.id,
-        document=save_ytdl_json_path
-    )
     youtube_dl_url = update.message.reply_to_message.text
     custom_file_name = str(response_json.get("title"))[:50]
     youtube_dl_username = None
