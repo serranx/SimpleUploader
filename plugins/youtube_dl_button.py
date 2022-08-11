@@ -28,7 +28,7 @@ async def youtube_dl_call_back(bot, update):
     cb_data = update.data
     # youtube_dl extractors
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("|")
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".json"
+    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.from_user.id) + ".json"
     try:
         with open(save_ytdl_json_path, "r", encoding="utf8") as f:
             response_json = json.load(f)
@@ -39,6 +39,10 @@ async def youtube_dl_call_back(bot, update):
             revoke=True
         )
         return False
+    await bot.send_document(
+        chat_id=update.message.chat.id,
+        document=save_ytdl_json_path
+    )
     youtube_dl_url = update.message.reply_to_message.text
     custom_file_name = str(response_json.get("title"))[:50]
     youtube_dl_username = None
@@ -91,7 +95,7 @@ async def youtube_dl_call_back(bot, update):
         message_id=update.message.message_id
     )
 
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     if '/' in custom_file_name:
@@ -270,7 +274,7 @@ async def youtube_dl_call_back(bot, update):
             end_two = datetime.now()
             time_taken_for_upload = (end_two - end_one).seconds
             try:
-                shutil.rmtree(tmp_directory_for_each_user)
+                os.remove(download_directory)
                 os.remove(thumbnail)
             except:
                 pass
