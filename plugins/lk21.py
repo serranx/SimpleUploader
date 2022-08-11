@@ -50,11 +50,11 @@ async def dl_googledrive(bot, update):
     else:
         filename = response_gd["title"]
     if dl_ext in video_formats:
-      send_type = "video"
+        send_type = "video"
     elif dl_ext in audio_formats:
-      send_type = "audio"
+        send_type = "audio"
     else:
-      send_type = "file"
+        send_type = "file"
     update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
     await processing.delete(True)
     await googledrive.download(bot, update)
