@@ -12,7 +12,6 @@ async def delt(bot, update):
 
 @Clinton.on_callback_query()
 async def button(bot, update):
-    async def button(bot, update):
     cb_data = update.data
     if "|" in cb_data:
         if "fembed" in cb_data.split("|")[0]:
