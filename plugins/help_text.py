@@ -20,7 +20,7 @@ import lk21
 
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
-    path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + "/"
+    path = Config.DOWNLOAD_LOCATION + str(update.chat.id) + "/"
     try:
         files = os.listdir(path)
         joined_files = "\n".join(files)
@@ -41,7 +41,7 @@ async def test(bot, update):
         
 @Clinton.on_message(filters.private & filters.command(["cancel"]))
 async def cancel_process(bot, update):
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"
+    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.chat.id) + ".json"
     if os.path.exists(save_ytdl_json_path):
         os.remove(save_ytdl_json_path)
         await bot.send_message(
