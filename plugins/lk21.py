@@ -34,7 +34,7 @@ async def dl_googledrive(bot, update):
             )
     else:
         url = update.text
-    response_gd = await googledrive.get(url)
+    response_gd = await googledrive.get(bot, update, url)
     logger.info(response_gd)
     try:
         await update.reply_text(
