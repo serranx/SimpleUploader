@@ -35,6 +35,8 @@ async def dl_googledrive(bot, update):
     else:
         url = update.text
     response_gd = await googledrive.get(bot, update, url)
+    file_title = response_gd["title"]
+    response_gd = response_gd["formats"][-1]
     logger.info(response_gd)
     try:
         await update.reply_text(
@@ -49,7 +51,7 @@ async def dl_googledrive(bot, update):
     if custom_filename is not None:
         filename = custom_filename
     else:
-        filename = response_gd["title"]
+        filename = file_title
     if dl_ext in video_formats:
         send_type = "video"
     elif dl_ext in audio_formats:
