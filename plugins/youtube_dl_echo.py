@@ -137,11 +137,6 @@ async def echo(bot, update):
             "/" + str(update.from_user.id) + ".json"
         with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
             json.dump(response_json, outfile, ensure_ascii=False)
-        
-        await bot.send_document(
-            chat_id=update.chat.id,
-            document=save_ytdl_json_path
-        )
         inline_keyboard = []
         duration = None
         if "duration" in response_json:
