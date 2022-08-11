@@ -17,6 +17,48 @@ from . import fembed
 #from . import dl_button
 import lk21
 
+@Clinton.on_message(filters.regex(pattern="drive.google\.com"))
+async def dl_googledrive(bot, update):
+    video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
+    audio_formats = ["mp3", "m4a"]
+    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    if " * " in update.text:
+        try:
+            url, custom_filename = update.text.split(" * ")
+        except:
+            await bot.edit_message_text(
+                text=Translation.INCORRECT_REQUEST,
+                chat_id=update.chat.id,
+                message_id=processing.message_id
+            )
+    else:
+        url = update.text
+    response_gd = await googledrive.get(url)
+    logger.info(response_gd)
+    try:
+        await update.reply_text(
+            str(response_gd)
+        )
+    except Exception as e:
+        await update.reply_text(
+            str(e)
+        )
+    dl_link = response_gd["url"]
+    dl_ext = response_gd["ext"]
+    if custom_filename is not None:
+        filename = custom_filename
+    else:
+        filename = response_gd["title"]
+    if dl_ext in video_formats:
+      send_type = "video"
+    elif dl_ext in audio_formats:
+      send_type = "audio"
+    else:
+      send_type = "file"
+    update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
+    await processing.delete(True)
+    await googledrive.download(bot, update)
+
 @Clinton.on_message(filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|embedsito\.com|owodeuwu\.xyz|plusto\.link"))
 async def dl_fembed(bot, update):
     processing = await update.reply_text(
