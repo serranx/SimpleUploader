@@ -139,7 +139,7 @@ async def echo(bot, update):
             json.dump(response_json, outfile, ensure_ascii=False)
         
         await bot.send_document(
-            chat_id=update.message.chat.id,
+            chat_id=update.chat.id,
             document=save_ytdl_json_path
         )
         inline_keyboard = []
