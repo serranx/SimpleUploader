@@ -38,11 +38,6 @@ async def download(bot, update, dl_info):
     send_type, dl_url, filename = cb_data.split("|")
     description = filename
     start = datetime.now()
-    await bot.edit_message_text(
-        chat_id=update.chat.id,
-        message_id=dl_info.message_id,
-        text="<b>Mediafire link detected...</b> ⌛",
-    )
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
