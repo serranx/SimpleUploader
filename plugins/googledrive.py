@@ -55,7 +55,7 @@ async def get(url):
         
 async def download(bot, update):
     cb_data = update.data
-    send_type, dl_url, filename = cb_data.split("|")
+    send_type, youtube_dl_url, filename = cb_data.split("|")
     description = filename
     start = datetime.now()
     dl_info = await update.reply_text(
