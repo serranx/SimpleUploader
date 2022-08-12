@@ -17,7 +17,6 @@ async def test(bot, update):
     try:
         files = os.listdir(path)
         joined_files = "\n".join(files)
-        print(joined_files)
         await bot.send_message(
             chat_id=update.chat.id,
             text=str(joined_files),
@@ -107,7 +106,7 @@ async def start(bot, update):
     await AddUser(bot, update)
     await bot.send_message(
         chat_id=update.chat.id,
-        text=Translation.START_TEXT.format(update.from_user.mention),
+        text=Translation.START_TEXT.format(update.from_user.first_name),
         reply_markup=InlineKeyboardMarkup(
             [
                 [
