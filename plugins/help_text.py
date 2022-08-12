@@ -83,7 +83,6 @@ async def edit_caption(bot, update):
 
 @Clinton.on_message(filters.private & filters.command(["help"]))
 async def help_user(bot, update):
-    # logger.info(update)
     await AddUser(bot, update)
     await bot.send_message(
         chat_id=update.chat.id,
@@ -95,6 +94,7 @@ async def help_user(bot, update):
 
 @Clinton.on_message(filters.private & filters.command(["addcaption"]))
 async def add_caption_help(bot, update):
+    await AddUser(bot, update)
     await bot.send_message(
         chat_id=update.chat.id,
         text=Translation.ADD_CAPTION_HELP,
@@ -104,7 +104,6 @@ async def add_caption_help(bot, update):
 
 @Clinton.on_message(filters.private & filters.command(["start"]))
 async def start(bot, update):
-    # logger.info(update)
     await AddUser(bot, update)
     await bot.send_message(
         chat_id=update.chat.id,
