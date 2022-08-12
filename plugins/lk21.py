@@ -135,37 +135,40 @@ async def dl_fembed(bot, update):
 async def dl_mediafire(bot, update):
     video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
     audio_formats = ["mp3", "m4a"]
-    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    bypasser = lk21.Bypass()
+    processing = await update.reply_text(
+        "<b>Processing... ⏳</b>", 
+        reply_to_message_id=update.message_id
+    )
     if " * " in update.text:
-      try:
-        url, custom_filename = update.text.split(" * ")
-      except:
-        await bot.edit_message_text(
-          text=Translation.INCORRECT_REQUEST,
-          chat_id=update.chat.id,
-          message_id=processing.message_id
-        )
+        try:
+            url, custom_filename = update.text.split(" * ")
+        except:
+            await bot.edit_message_text(
+                text=Translation.INCORRECT_REQUEST,
+                chat_id=update.chat.id,
+                message_id=processing.message_id
+            )
       if re.search("download[0-9]*\.mediafire\.com", url):
-        url_parts = url.split("/")
-        url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
-      r = await mediafire.get(url)
-      dl_link, filename = r.split("|")
-      dl_ext = filename.split(".")[-1]
-      filename = custom_filename
+          url_parts = url.split("/")
+          url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
     else:
-      url = update.text
-      if re.search("download[0-9]*\.mediafire\.com", url):
-        url_parts = url.split("/")
-        url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
-      r = await mediafire.get(url)
-      dl_link, filename = r.split("|")
-      dl_ext = filename.split(".")[-1]
+        url = update.text
+        if re.search("download[0-9]*\.mediafire\.com", url):
+            url_parts = url.split("/")
+            url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
+    dl_link = bypasser.bypass_url(url)
+    #https://www.mediafire.com/file/p4f7hrqn2r47y1q/Duolingo_v5.60.0_MOD_mundoperfecto.net.apk/file?dkey=sj1nmku431h&r=860
+    filename = dl_link.split("/")[-1]
+    dl_ext = filename.split(".")[-1]
+    if custom_filename is not None:
+        filename = custom_filename + "." + dl_ext
     if dl_ext in video_formats:
-      send_type = "video"
+        send_type = "video"
     elif dl_ext in audio_formats:
-      send_type = "audio"
+        send_type = "audio"
     else:
-      send_type = "file"
-    update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
+        send_type = "file"
+    update.data = "{}|{}|{}".format(send_type, dl_link, filename)
     await processing.delete(True)
     await mediafire.download(bot, update)
