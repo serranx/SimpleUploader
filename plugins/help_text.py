@@ -1,22 +1,15 @@
 
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 import os
-import re
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
 from pyrogram import filters
 from database.adduser import AddUser
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from . import mediafire
-from . import fembed
-#from . import dl_button
-import lk21
 
 @Clinton.on_message(filters.private & filters.command(["test"]))
 async def test(bot, update):
@@ -73,12 +66,20 @@ async def edit_caption(bot, update):
         try:
             await bot.send_cached_media(
                 chat_id=update.chat.id,
-                file_id=update.reply_to_message.document.file_id,
+                file_id=update.reply_to_message.audio.file_id,
                 reply_to_message_id=update.message_id,
                 caption=update.text
             )
         except:
-            pass
+            try:
+                await bot.send_cached_media(
+                    chat_id=update.chat.id,
+                    file_id=update.reply_to_message.document.file_id,
+                    reply_to_message_id=update.message_id,
+                    caption=update.text
+                )
+            except:
+                pass
 
 @Clinton.on_message(filters.private & filters.command(["help"]))
 async def help_user(bot, update):
