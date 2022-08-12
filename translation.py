@@ -8,10 +8,11 @@ I'm <b>Simple Uploader Bot! ✨</b>
 2. some M3U8 links
 3. YouTube links
 4. Mediafire links
-5. Fembed links (<code>fembed.com</code> domain)
+5. Google Drive links (if links is public, no folders)
+6. Fembed links (<code>fembed.com</code> domain)
 and many other direct links!... 🥳
     
-<i><b>Note:</b> Support for Google Drive, MEGA and other links will be added soon.</i>
+<i><b>Note:</b> Support for other links will be added soon.</i>
 
 <i>You have the ability to set custom captions and custom thumbnails for your uploads too! 💫</i>
 
@@ -49,7 +50,7 @@ URL | filename | username | password"""
 <i>Go check if you can access the content in the url from your browser first!</i>
 
 <b>YouTubeDL</b> said: {}"""
-    HELP_USER = """<b>How to Use Me?</b> 🤔
+    HELP_USER = """<b>How to use me?</b> 🤔
 Follow these steps! 👇
     
 <b>1. Send URL</b>
@@ -57,9 +58,9 @@ Follow these steps! 👇
 If you want a custom caption on your video/file send the name/text you want to set on the video/file in the following format 👇
 
 <b>Link * caption</b> (without extension). 
-[Separate the link and the caption name with "*" mark].
+<i>[Separate the link and the caption name with "*" mark].</i>
 
-<i>It is important that you separate with spaces the URL, * and the caption.</i>
+<u>It is important that you separate with spaces the URL, * and the caption.</u>
 
 <b>👍 Send something like this:</b>
 <code>https://www.website.com/video.mp4 * caption text</code>
@@ -67,27 +68,27 @@ If you want a custom caption on your video/file send the name/text you want to s
 <b>🤡 Not like this:</b>
 <code>❌ https://www.website.com/video.mp4*caption text ❌</code>
 
-👉 The caption/text you type will be automatically set as the custom name of the uploaded file 😎
+The caption/text you type will be automatically set as the custom name of the uploaded file 😎
 
-<i><b>Note:</b> You can change/add any caption later if you want as explained in the end 🥰</i>
+<i><b>Note:</b> You can change/add any caption later if you want as explained in the end.</i>
 
-<b>2. Then send Custom Thumbnail when asked while uploading the URL</b> (This step is optional) 
+<b>2. Then send custom thumbnail when asked while uploading the URL</b> (This step is optional) 
 
 🔹 It means it is not necessary to send an image to include as an thumbnail.
-If you don't send a thumbnail the video/file will be uploaded with an auto genarated thumbnail from the video.
-The thumbnail you send will be used for your next uploads!
+If you don't send a thumbnail the video/file will be uploaded with an auto generated thumbnail from the video.
+<i>(The thumbnail you send will be used for your next uploads)</i>
 
-Press /delthumbnail if you want to delete the previously saved thumbnail.
-(then the video will be uploaded with an auto-genarated thumbnail)
+🔹 Press /delthumbnail if you want to delete the previously saved thumbnail.
+<i>(Then the video will be uploaded with an auto-genarated thumbnail)</i>
 
 <b>3. Select the button</b>
 
   <u>Video-option</u>: Give video/file in video format
   <u>File-option</u>: Give video/file in file format
    
-<b>Special feature: 👉 Set caption to any file you want! ✨</b>
+<b>👉 Special feature: Set caption to any file you want! ✨</b>
 
-🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> by selecting it (as replying to a message 😅) and the text you wrote will be attached as caption! 🤩
+🔹 Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> by selecting it (as replying to a message) and the text you wrote will be attached as caption! 🤩
 
 Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>Send Like This! It's Easy</a> 🥳"""
     REPLY_TO_MEDIA_ALBUM_TO_GEN_THUMB = "Reply /generatecustomthumbnail to a media album, to generate custom thumbail."
