@@ -31,6 +31,7 @@ async def dl_googledrive(bot, update):
                 chat_id=update.chat.id,
                 message_id=processing.message_id
             )
+            return False
     else:
         url = update.text
     response_gd = await googledrive.get(bot, update, url)
@@ -46,6 +47,7 @@ async def dl_googledrive(bot, update):
         await update.reply_text(
             str(e)
         )
+        return False
     dl_url = response_gd["url"]
     ext = response_gd["ext"]
     if custom_filename is not None:
@@ -129,6 +131,7 @@ async def dl_fembed(bot, update):
             chat_id=update.chat.id,
             text=str(e)
         )
+        return False
     
 @Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
 async def dl_mediafire(bot, update):
@@ -148,6 +151,7 @@ async def dl_mediafire(bot, update):
                 chat_id=update.chat.id,
                 message_id=msg_info.message_id
             )
+            return False
     else:
         url = update.text
     if re.search("download[0-9]*\.mediafire\.com", url):
@@ -157,19 +161,22 @@ async def dl_mediafire(bot, update):
         url = url.split("?dkey=")[0]
     try:
         response_mf = await mediafire.get(url)
-        await update.reply_text(
-            response_mf
-        )
     except:
         await bot.edit_message_text(
             chat_id=update.chat.id,
             message_id=msg_info.message_id,
             text="<b>I couldn't find any video/file 🤕</b>"
         )
+        return False
     dl_url, filename = response_mf.split("|")
     ext = filename.split(".")[-1]
     if custom_filename is not None:
-        filename = custom_filename + "." + ext
+        if "\n" in custom_filename:
+            filename = custom_filename.split("\n")[0]
+        if custom_filename.endswith(ext):
+            filename = custom_filename
+        else:
+            filename = custom_filename + "." + ext
     if ext in video_formats:
         send_type = "video"
     elif ext in audio_formats:
