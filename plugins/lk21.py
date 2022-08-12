@@ -40,8 +40,9 @@ async def dl_googledrive(bot, update):
         await update.reply_text(
             str(e)
         )
+        return False
     file_title = response_gd["title"]
-    response_gd = response_gd["formats"][-1]
+    #response_gd = response_gd["formats"][-1]
     logger.info(response_gd)
     try:
         await update.reply_text(
