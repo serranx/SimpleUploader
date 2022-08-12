@@ -140,6 +140,7 @@ async def dl_mediafire(bot, update):
         "<b>Processing... ⏳</b>", 
         reply_to_message_id=update.message_id
     )
+    custom_filename = None
     if " * " in update.text:
         try:
             url, custom_filename = update.text.split(" * ")
@@ -175,6 +176,9 @@ async def dl_mediafire(bot, update):
         await processing.delete(True)
         await mediafire.download(bot, update)
     except Exception as e:
-        await update.reply_text(
-            "I couldn't find any file/video 🤕\n" + str(e)
+        await bot.edit_message_text(
+            chat_id=update.chat.id,
+            message_id=processing.message_id,
+            text="<b>I couldn't find any file/video 🤕</b>\n" + str(e)
         )
+        return False
