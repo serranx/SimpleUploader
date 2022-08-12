@@ -52,6 +52,7 @@ async def get(url):
         #response_json = json.loads(x_reponse)
         response_json = x_reponse
         response_json = response_json["formats"][-1]
+        logger.info(response_json)
         response_json.append({
             "title": x_reponse["title"]
         })
