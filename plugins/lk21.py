@@ -62,7 +62,7 @@ async def dl_googledrive(bot, update):
         send_type = "audio"
     else:
         send_type = "file"
-    update.data = "{}|{}|{}".format(send_type, dl_url, filename)
+    update.data = "{}|{}|{}".format(send_type, url, filename)
     await processing.delete(True)
     await googledrive.download(bot, update)
 
