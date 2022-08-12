@@ -176,7 +176,7 @@ async def download(bot, update, dl_info):
 async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
     downloaded = 0
     display_message = ""
-    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+    async with session.get(url, allow_redirects=True, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
         total_length = int(response.headers["Content-Length"])
         content_type = response.headers["Content-Type"]
         if "text" in content_type and total_length < 500:
