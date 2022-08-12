@@ -134,12 +134,11 @@ async def dl_fembed(bot, update):
 async def dl_mediafire(bot, update):
     video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
     audio_formats = ["mp3", "m4a"]
-    bypasser = lk21.Bypass()
-    processing = await update.reply_text(
-        "<b>Processing... ⏳</b>", 
+    custom_filename = None
+    msg_info = await update.reply_text(
+        "<b>Processing... ⏳</b>",
         reply_to_message_id=update.message_id
     )
-    custom_filename = None
     if " * " in update.text:
         try:
             url, custom_filename = update.text.split(" * ")
@@ -147,38 +146,26 @@ async def dl_mediafire(bot, update):
             await bot.edit_message_text(
                 text=Translation.INCORRECT_REQUEST,
                 chat_id=update.chat.id,
-                message_id=processing.message_id
+                message_id=msg_info.message_id
             )
-            return False
-        if re.search("download[0-9]*\.mediafire\.com", url):
-            url_parts = url.split("/")
-            url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
     else:
         url = update.text
-        if re.search("download[0-9]*\.mediafire\.com", url):
-            url_parts = url.split("/")
-            url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
-    dl_link = bypasser.bypass_url(url)
-    dl_link = "https:" + dl_link
-    #https://www.mediafire.com/file/p4f7hrqn2r47y1q/Duolingo_v5.60.0_MOD_mundoperfecto.net.apk/file?dkey=sj1nmku431h&r=860
-    try:
-        filename = dl_link.split("/")[-2]
-        dl_ext = filename.split(".")[-1]
-        if custom_filename is not None:
-            filename = custom_filename + "." + dl_ext
-        if dl_ext in video_formats:
-            send_type = "video"
-        elif dl_ext in audio_formats:
-            send_type = "audio"
-        else:
-            send_type = "file"
-        update.data = "{}|{}|{}".format(send_type, dl_link, filename)
-        #await processing.delete(True)
-        await mediafire.download(bot, update, processing)
-    except Exception as e:
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=processing.message_id,
-            text=dl_link+"\n<b>I couldn't find any file/video 🤕</b>\n" + str(e)
-        )
-        return False
+    if re.search("download[0-9]*\.mediafire\.com", url):
+        url_parts = url.split("/")
+        url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
+    if "?dkey=" in url:
+        url = url.split("?dkey=")[0]
+    response_mf = await mediafire.get(url)
+    dl_url, filename = response_mf.split("|")
+    ext = filename.split(".")[-1]
+    if custom_filename is not None:
+        filename = custom_filename + "." + ext
+    if ext in video_formats:
+        send_type = "video"
+    elif dl_ext in audio_formats:
+        send_type = "audio"
+    else:
+        send_type = "file"
+    update.data = "{}|{}|{}".format(send_type, dl_url, filename)
+    #await processing.delete(True)
+    await mediafire.download(bot, update, msg_info)
