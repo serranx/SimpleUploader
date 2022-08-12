@@ -55,11 +55,11 @@ async def get(url):
         
 async def download(bot, update):
     cb_data = update.data
-    send_type, youtube_dl_url, filename = cb_data.split("|")
+    tg_send_type, youtube_dl_url, filename = cb_data.split("|")
     description = filename
     start = datetime.now()
     dl_info = await update.reply_text(
-        text="<b>Google Drive link detected...</b> ⌛",
+        text=Translation.DOWNLOAD_START.format(filename),
         reply_to_message_id=update.message_id
     )
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.chat.id)
