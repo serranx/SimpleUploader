@@ -21,6 +21,7 @@ import lk21
 async def dl_googledrive(bot, update):
     video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
     audio_formats = ["mp3", "m4a"]
+    custom_filename = None
     processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
     if " * " in update.text:
         try:
@@ -34,22 +35,23 @@ async def dl_googledrive(bot, update):
             return False
     else:
         url = update.text
-    response_gd = await googledrive.get(url)
-    file_title = response_gd["title"]
-    #response_gd = response_gd["formats"][-1]
     try:
-        await update.reply_text(
-            str(response_gd)
-        )
-    except Exception as e:
-        await update.reply_text(
-            str(e)
+        response_gd = await googledrive.get(url)
+    except:
+        await bot.edit_message_text(
+            chat_id=update.chat.id,
+            message_id=processing.message_id,
+            text="<b>I couldn't find any video/file 🤕</b>"
         )
         return False
+    file_title = response_gd["title"]
     dl_url = response_gd["url"]
     ext = response_gd["ext"]
     if custom_filename is not None:
-        filename = custom_filename + "." + ext
+        if custom_filename.endswith("." + ext):
+            filename = custom_filename
+        else:
+            filename = custom_filename + "." + ext
     else:
         filename = file_title
     if ext in video_formats:
@@ -171,7 +173,7 @@ async def dl_mediafire(bot, update):
     if custom_filename is not None:
         if "\n" in custom_filename:
             filename = custom_filename.split("\n")[0]
-        if custom_filename.endswith(ext):
+        if custom_filename.endswith("." + ext):
             filename = custom_filename
         else:
             filename = custom_filename + "." + ext
