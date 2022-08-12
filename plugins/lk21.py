@@ -173,12 +173,12 @@ async def dl_mediafire(bot, update):
         else:
             send_type = "file"
         update.data = "{}|{}|{}".format(send_type, dl_link, filename)
-        await processing.delete(True)
-        await mediafire.download(bot, update)
+        #await processing.delete(True)
+        await mediafire.download(bot, update, processing)
     except Exception as e:
         await bot.edit_message_text(
             chat_id=update.chat.id,
             message_id=processing.message_id,
-            text="<b>I couldn't find any file/video 🤕</b>\n" + str(e)
+            text=dl_link+"\n<b>I couldn't find any file/video 🤕</b>\n" + str(e)
         )
         return False
