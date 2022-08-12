@@ -49,21 +49,17 @@ async def get(url):
         x_reponse = t_response
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
-        #response_json = json.loads(x_reponse)
-        response_json = x_reponse
+        response_json = json.loads(x_reponse)
+        title = response_json["title"]
         response_json = response_json["formats"][-1]
+        response_json["title"] = title
         logger.info(response_json)
-        response_json.append({
-            "title": x_reponse["title"]
-        })
         return response_json
         
 async def download(bot, update):
     cb_data = update.data
-    send_type, dl_link, ext, filename = cb_data.split("|")
+    send_type, dl_link, filename = cb_data.split("|")
     description = filename
-    if not "." + ext in filename:
-        filename += '.' + ext
     start = datetime.now()
     dl_info = await bot.send_message(
         chat_id=update.chat.id,
