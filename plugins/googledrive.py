@@ -145,7 +145,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         update,
-                        custom_file_name,
+                        filename,
                         start_time
                     )
                 )
@@ -162,7 +162,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         update,
-                        custom_file_name,
+                        filename,
                         start_time
                     )
                 )
@@ -180,7 +180,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         update,
-                        custom_file_name,
+                        filename,
                         start_time
                     )
                 )
@@ -202,7 +202,7 @@ async def download(bot, update):
                     progress_args=(
                         Translation.UPLOAD_START,
                         update,
-                        custom_file_name,
+                        filename,
                         start_time
                     )
                 )
@@ -224,4 +224,3 @@ async def download(bot, update):
             logger.info("✅ " + filename)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
             logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
-
