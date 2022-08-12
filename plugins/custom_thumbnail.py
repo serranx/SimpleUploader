@@ -1,8 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# (c) Shrimadhav U K | Modifieded By : @DC4_WARRIOR
 
-# the logging things
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -52,7 +48,7 @@ async def viewthumbnail(bot, update):
         await update.reply_text(text=f"No thumbnail found 🥴")
 
 async def Gthumb01(bot, update):
-    thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".jpg"
+    thumb_image_path = Config.DOWNLOAD_LOCATION + str(update.from_user.id) + ".jpg"
     db_thumbnail = await clinton.get_thumbnail(update.from_user.id)
     if db_thumbnail is not None:
         thumbnail = await bot.download_media(message=db_thumbnail, file_name=thumb_image_path)
@@ -66,7 +62,7 @@ async def Gthumb01(bot, update):
     return thumbnail
 
 async def Gthumb02(bot, update, duration, download_directory):
-    thumb_image_path = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + ".jpg"
+    thumb_image_path = Config.DOWNLOAD_LOCATION + str(update.from_user.id) + ".jpg"
     db_thumbnail = await clinton.get_thumbnail(update.from_user.id)
     if db_thumbnail is not None:
         thumbnail = await bot.download_media(message=db_thumbnail, file_name=thumb_image_path)
