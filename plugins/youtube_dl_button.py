@@ -139,7 +139,7 @@ async def youtube_dl_call_back(bot, update):
         command_to_exec.append(youtube_dl_password)
     command_to_exec.append("--no-warnings")
     # command_to_exec.append("--quiet")
-    logger.info(command_to_exec)
+    # logger.info(command_to_exec)
     start = datetime.now()
     process = await asyncio.create_subprocess_exec(
         *command_to_exec,
@@ -151,8 +151,8 @@ async def youtube_dl_call_back(bot, update):
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
-    logger.info(e_response)
-    logger.info(t_response)
+    #logger.info(e_response)
+    #logger.info(t_response)
     ad_string_to_replace = "please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output."
     if e_response and ad_string_to_replace in e_response:
         error_message = e_response.replace(ad_string_to_replace, "")
