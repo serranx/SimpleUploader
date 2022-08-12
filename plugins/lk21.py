@@ -34,8 +34,12 @@ async def dl_googledrive(bot, update):
             return False
     else:
         url = update.text
-    response_gd = await googledrive.get(bot, update, url)
-    response_gd = json.load(response_gd)
+    try:
+       response_gd = await googledrive.get(url)
+    except Exception as e:
+        await update.reply_text(
+            str(e)
+        )
     file_title = response_gd["title"]
     response_gd = response_gd["formats"][-1]
     logger.info(response_gd)
