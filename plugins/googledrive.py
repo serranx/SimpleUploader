@@ -80,12 +80,16 @@ async def download(bot, update):
         command_to_exec.append(Config.HTTP_PROXY)
     command_to_exec.append("--no-warnings")
     start = datetime.now()
-    process = await asyncio.create_subprocess_exec(
-        *command_to_exec,
-        # stdout must a pipe to be accessible as process.stdout
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
+    try:
+        process = await asyncio.create_subprocess_exec(
+            *command_to_exec,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+    except Exception as e:
+        await update.reply_text(
+            str(e)
+        )
     # Wait for the subprocess to finish
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
