@@ -155,7 +155,14 @@ async def dl_mediafire(bot, update):
         url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
     if "?dkey=" in url:
         url = url.split("?dkey=")[0]
-    response_mf = await mediafire.get(url)
+    try:
+        response_mf = await mediafire.get(url)
+    except:
+        await bot.edit_message_text(
+            chat_id=update.chat.id,
+            message_id=msg_info.message_id,
+            text="<b>I couldn't find any video/file 🤕</b>"
+        )
     dl_url, filename = response_mf.split("|")
     ext = filename.split(".")[-1]
     if custom_filename is not None:
