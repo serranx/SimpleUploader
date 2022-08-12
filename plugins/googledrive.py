@@ -221,7 +221,7 @@ async def download(bot, update):
                 message_id=dl_info.message_id,
                 disable_web_page_preview=True
             )
-            logger.info("✅ " + custom_file_name)
+            logger.info("✅ " + filename)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
             logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
 
