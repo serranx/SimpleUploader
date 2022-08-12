@@ -1,21 +1,19 @@
+
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import sys, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, json, math
+import sys, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, aiohttp, json, math
 from config import Config
+from datetime import datetime
 from database.adduser import AddUser
 from translation import Translation
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-from pyrogram import filters
 from pyrogram import Client as Clinton
 from database.access import clinton
 from helper_funcs.display_progress import humanbytes
 from helper_funcs.help_uploadbot import DownLoadFile
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.errors import UserNotParticipant
+from plugins.custom_thumbnail import *
 
 async def get(url):
     if Config.HTTP_PROXY != "":
