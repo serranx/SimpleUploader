@@ -43,24 +43,22 @@ async def get(url):
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
-    if t_response:
-        x_reponse = t_response
-        if "\n" in x_reponse:
-            x_reponse, _ = x_reponse.split("\n")
-        response_json = json.loads(x_reponse)
-        title = response_json["title"]
-        response_json = response_json["formats"][-1]
-        response_json["title"] = title
-        logger.info(response_json)
-        return response_json
+    
+    x_reponse = t_response
+    if "\n" in x_reponse:
+        x_reponse, _ = x_reponse.split("\n")
+    response_json = json.loads(x_reponse)
+    title = response_json["title"]
+    response_json = response_json["formats"][-1]
+    response_json["title"] = title
+    return response_json
         
 async def download(bot, update):
     cb_data = update.data
-    send_type, dl_link, filename = cb_data.split("|")
+    send_type, dl_url, filename = cb_data.split("|")
     description = filename
     start = datetime.now()
-    dl_info = await bot.send_message(
-        chat_id=update.chat.id,
+    dl_info = await update.reply_text(
         text="<b>Google Drive link detected...</b> ⌛",
         reply_to_message_id=update.message_id
     )
@@ -75,7 +73,7 @@ async def download(bot, update):
             await download_coroutine(
                 bot,
                 session,
-                dl_link,
+                dl_url,
                 download_directory,
                 update.chat.id,
                 dl_info.message_id,
