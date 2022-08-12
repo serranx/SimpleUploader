@@ -16,15 +16,15 @@ from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, Tim
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
     
-async def download(bot, update):
+async def download(bot, update, dl_info):
     cb_data = update.data
     send_type, dl_link, filename = cb_data.split("|")
     description = filename
     start = datetime.now()
-    dl_info = await bot.send_message(
+    await bot.edit_message_text(
         chat_id=update.chat.id,
-        text="<b>Mediafire link detected...</b> ⌛",
-        reply_to_message_id=update.message_id
+        message_id=dl_info.message_id,
+        text="<b>Mediafire link detected...</b> ⌛"
     )
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
