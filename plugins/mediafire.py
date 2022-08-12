@@ -39,6 +39,7 @@ async def download(bot, update, dl_info):
     description = filename
     start = datetime.now()
     await bot.edit_message_text(
+        chat_id=update.chat.id,
         message_id=dl_info.message_id,
         text="<b>Mediafire link detected...</b> ⌛",
     )
