@@ -46,19 +46,19 @@ async def dl_googledrive(bot, update):
         await update.reply_text(
             str(e)
         )
-    dl_link = response_gd["url"]
-    dl_ext = response_gd["ext"]
+    dl_url = response_gd["url"]
+    ext = response_gd["ext"]
     if custom_filename is not None:
         filename = custom_filename
     else:
         filename = file_title
-    if dl_ext in video_formats:
+    if ext in video_formats:
         send_type = "video"
-    elif dl_ext in audio_formats:
+    elif ext in audio_formats:
         send_type = "audio"
     else:
         send_type = "file"
-    update.data = "{}|{}|{}|{}".format(send_type, dl_link, dl_ext, filename)
+    update.data = "{}|{}|{}|{}".format(send_type, dl_urlk, ext, filename)
     await processing.delete(True)
     await googledrive.download(bot, update)
 
@@ -162,7 +162,7 @@ async def dl_mediafire(bot, update):
         filename = custom_filename + "." + ext
     if ext in video_formats:
         send_type = "video"
-    elif dl_ext in audio_formats:
+    elif ext in audio_formats:
         send_type = "audio"
     else:
         send_type = "file"
