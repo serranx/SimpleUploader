@@ -13,9 +13,8 @@ from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from . import googledrive
-from . import mediafire
 from . import fembed
-#from . import dl_button
+from . import mediafire
 import lk21
 
 @Clinton.on_message(filters.regex(pattern="drive.google\.com"))
@@ -160,9 +159,10 @@ async def dl_mediafire(bot, update):
             url_parts = url.split("/")
             url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
     dl_link = bypasser.bypass_url(url)
+    dl_link = "https:" + dl_link
     #https://www.mediafire.com/file/p4f7hrqn2r47y1q/Duolingo_v5.60.0_MOD_mundoperfecto.net.apk/file?dkey=sj1nmku431h&r=860
     try:
-        filename = dl_link.split("/")[-1]
+        filename = dl_link.split("/")[-2]
         dl_ext = filename.split(".")[-1]
         if custom_filename is not None:
             filename = custom_filename + "." + dl_ext
