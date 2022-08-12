@@ -1,7 +1,6 @@
 
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 import os, re, random, string, json
 from config import Config
@@ -22,7 +21,10 @@ async def dl_googledrive(bot, update):
     video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
     audio_formats = ["mp3", "m4a"]
     custom_filename = None
-    processing = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    processing = await update.reply_text(
+        "<b>Processing... ⏳</b>", 
+        reply_to_message_id=update.message_id
+    )
     if " * " in update.text:
         try:
             url, custom_filename = update.text.split(" * ")
