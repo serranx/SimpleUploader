@@ -157,6 +157,9 @@ async def dl_mediafire(bot, update):
         url = url.split("?dkey=")[0]
     try:
         response_mf = await mediafire.get(url)
+        await update.reply_text(
+            response_mf
+        )
     except:
         await bot.edit_message_text(
             chat_id=update.chat.id,
