@@ -15,40 +15,18 @@ from plugins.custom_thumbnail import *
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
-
-async def get(url):
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-        }
-    
-    req = requests.get(url, headers)
-    soup = BeautifulSoup(req.content, 'html.parser')
-    
-    dl_url = soup.find("a", class_="popsok").get('href')
-    filename = soup.find("div", class_="filename").get_text()
-    
-    return "{}|{}".format(dl_url, filename)
     
 async def download(bot, update):
     cb_data = update.data
-    send_type, dl_link, ext, filename = cb_data.split("|")
+    send_type, dl_link, filename = cb_data.split("|")
     description = filename
-    if not "." + ext in filename:
-        filename += '.' + ext
     start = datetime.now()
     dl_info = await bot.send_message(
         chat_id=update.chat.id,
         text="<b>Mediafire link detected...</b> ⌛",
-        #text=Translation.DOWNLOAD_START.format(filename),
-        parse_mode="html",
-        disable_web_page_preview=True,
         reply_to_message_id=update.message_id
     )
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + filename
@@ -216,26 +194,23 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                     percentage = downloaded * 100 / total_length
                     speed = downloaded / diff
                     elapsed_time = round(diff) * 1000
-                    time_to_completion = round(
-                        (total_length - downloaded) / speed) * 1000
+                    time_to_completion = round((total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
                     try:
                         progress = "<b>Downloading to my server...</b> 📥\n[{0}{1}] {2}%\n📁 <i>{3}</i>\n\n".format(
-            ''.join(["●" for i in range(math.floor(percentage / 5))]),
-            ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2),
-            file_name.split("/")[-1]
-        )
+                            ''.join(["●" for i in range(math.floor(percentage / 5))]),
+                            ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
+                            round(percentage, 2),
+                            file_name.split("/")[-1]
+                        )
                         current_message = progress + """🔹<b>Finished ✅:</b> {0} of {1}
 🔹<b>Speed 🚀:</b> {2}/s
 🔹<b>Time left 🕒:</b> {3}""".format(
-            
-            humanbytes(downloaded),
-            humanbytes(total_length),
-            humanbytes(speed),
-            TimeFormatter(time_to_completion)
-        )
-
+                            humanbytes(downloaded),
+                            humanbytes(total_length),
+                            humanbytes(speed),
+                            TimeFormatter(time_to_completion)
+                        )
                         if current_message != display_message:
                             await bot.edit_message_text(
                                 chat_id,
