@@ -17,7 +17,7 @@ from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import UserNotParticipant
 
-async def get(bot, update, url):
+async def get(url):
     if Config.HTTP_PROXY != "":
         command_to_exec = [
             "yt-dlp",
@@ -49,8 +49,12 @@ async def get(bot, update, url):
         x_reponse = t_response
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
-        response_json = json.loads(x_reponse)
+        #response_json = json.loads(x_reponse)
+        response_json = x_reponse
         response_json = response_json["formats"][-1]
+        response_json.append({
+            "title": x_reponse["title"]
+        })
         return response_json
         
 async def download(bot, update):
