@@ -121,7 +121,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        msg_info,
                         custom_file_name,
                         start_time
                     )
@@ -137,7 +137,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        msg_info,
                         custom_file_name,
                         start_time
                     )
@@ -155,7 +155,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        update.message,
+                        msg_info,
                         custom_file_name,
                         start_time
                     )
