@@ -17,7 +17,7 @@ from . import fembed
 from . import mediafire
 import lk21
 
-@Clinton.on_message(filters.regex(pattern="drive.google\.com"))
+@Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
 async def dl_googledrive(bot, update):
     video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
     audio_formats = ["mp3", "m4a"]
