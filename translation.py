@@ -8,7 +8,7 @@ I'm <b>Simple Uploader Bot! ✨</b>
 2. some M3U8 links
 3. YouTube links
 4. Mediafire links
-5. Google Drive links (if link is public, no folders)
+5. Google Drive links (if link is public)
 6. Fembed links (<code>fembed.com</code> domain)
 and many other direct links!... 🥳
     
@@ -42,7 +42,7 @@ URL | filename | username | password"""
 Please wait uploading will start as soon as possible 😎"""
     UPLOAD_START = "<b>Uploading to Telegram...</b> 📤"
     RCHD_TG_API_LIMIT = """<b>❗The file couldn't be uploaded❗</b>
-<i>Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.</i>
+Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
 
 <b>🔹File detected:</b> <i>{}</i>
 <b>🔹Downloaded in:</b> <i>{} seconds</i>
