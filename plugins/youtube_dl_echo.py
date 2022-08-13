@@ -98,9 +98,7 @@ async def echo(bot, update):
     )
     time.sleep(1.5)
     e_response = stderr.decode().strip()
-    # logger.info(e_response)
     t_response = stdout.decode().strip()
-    # logger.info(t_response)
     # https://github.com/rg3/youtube-dl/issues/2630#issuecomment-38635239
     if e_response and "nonnumeric port" not in e_response:
         # logger.warn("Status : FAIL", exc.returncode, exc.output)
@@ -117,7 +115,6 @@ async def echo(bot, update):
         )
         return False
     if t_response:
-        #logger.info(t_response)
         x_reponse = t_response
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
@@ -139,6 +136,8 @@ async def echo(bot, update):
                 format_string = formats.get("format_note")
                 if format_string is None:
                     format_string = formats.get("format")
+                if "x-matroska" in format_string:
+                	  format_string = "mkv"
                 format_ext = formats.get("ext")
                 approx_file_size = ""
                 if "filesize" in formats:
@@ -151,7 +150,7 @@ async def echo(bot, update):
                     ikeyboard = [
                         InlineKeyboardButton(
                             #"🎥 video " + format_string.split("-")[0] + " " + approx_file_size,
-                            "🎥 video " + format_string + " " + approx_file_size,
+                            "🎥 video " + format_string,
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
