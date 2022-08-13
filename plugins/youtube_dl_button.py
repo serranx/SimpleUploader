@@ -2,29 +2,16 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import asyncio
-import json
-import math
-import os
-import shutil
-import time
+import asyncio, json, os, time
 from datetime import datetime
-# the secret configuration specific things
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
-#from transliterate import translit
 from plugins.custom_thumbnail import *
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-from pyrogram.types import InputMediaPhoto
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes
-# https://stackoverflow.com/a/37631799/4723940
-from database.access import clinton
-from PIL import Image
 
 async def youtube_dl_call_back(bot, update):
     cb_data = update.data
-    # youtube_dl extractors
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("|")
     save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.from_user.id) + ".json"
     try:
@@ -164,7 +151,7 @@ async def youtube_dl_call_back(bot, update):
         # logger.info(t_response)
         os.remove(save_ytdl_json_path)
         end_one = datetime.now()
-        time_taken_for_download = (end_one -start).seconds
+        time_taken_for_download = (end_one - start).seconds
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
@@ -175,7 +162,7 @@ async def youtube_dl_call_back(bot, update):
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
+                text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
                 message_id=update.message.message_id
             )
         else:
