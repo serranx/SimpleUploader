@@ -7,7 +7,6 @@ from config import Config
 # the Strings used for this "thing"
 from translation import Translation
 from pyrogram import filters
-from database.adduser import AddUser
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
