@@ -8,7 +8,7 @@ I'm <b>Simple Uploader Bot! ✨</b>
 2. some M3U8 links
 3. YouTube links
 4. Mediafire links
-5. Google Drive links (if links is public, no folders)
+5. Google Drive links (if link is public, no folders)
 6. Fembed links (<code>fembed.com</code> domain)
 and many other direct links!... 🥳
     
