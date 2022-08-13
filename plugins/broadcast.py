@@ -1,14 +1,12 @@
 
-# (c) @AbirHasan2005 | X-Noid
-
 import traceback, datetime, asyncio, string, random, time, os, aiofiles, aiofiles.os
 from database.access import clinton
 from pyrogram import filters
 from pyrogram import Client as Clinton
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid
-
 from config import Config
+
 broadcast_ids = {}
 
 async def send_msg(user_id, message):
