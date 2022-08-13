@@ -1,32 +1,17 @@
 
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import asyncio
-import aiohttp
-import json
-import math
-import os
-import shutil
-import time
+import asyncio, aiohttp, os, time
 from datetime import datetime
-# the secret configuration specific things
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
 from plugins.custom_thumbnail import *
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-# https://stackoverflow.com/a/37631799/4723940
-from PIL import Image
 
 async def ddl_call_back(bot, update):
-    #logger.info(update)
     cb_data = update.data
-    # youtube_dl extractors
     tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("=")
     youtube_dl_url = update.message.reply_to_message.text
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
@@ -49,7 +34,6 @@ async def ddl_call_back(bot, update):
             youtube_dl_url = youtube_dl_url.strip()
         if custom_file_name is not None:
             custom_file_name = custom_file_name.strip()
-        # https://stackoverflow.com/a/761825/4723940
     else:
         for entity in update.message.reply_to_message.entities:
             if entity.type == "text_link":
@@ -96,10 +80,11 @@ async def ddl_call_back(bot, update):
             )
             return False
     if os.path.exists(download_directory):
+        end_one = datetime.now()
         save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.message.chat.id) + ".json"
+        time_taken_for_download = (end_one - start).seconds
         if os.path.exists(save_ytdl_json_path):
             os.remove(save_ytdl_json_path)
-        end_one = datetime.now()
         await bot.edit_message_text(
             text=Translation.UPLOAD_START,
             chat_id=update.message.chat.id,
@@ -110,12 +95,11 @@ async def ddl_call_back(bot, update):
             file_size = os.stat(download_directory).st_size
         except FileNotFoundError as exc:
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
-            # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT,
+                text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
                 message_id=update.message.message_id
             )
         else:
@@ -203,7 +187,6 @@ async def ddl_call_back(bot, update):
                 os.remove(thumb_image_path)
             except:
                 pass
-            time_taken_for_download = (end_one - start).seconds
             time_taken_for_upload = (end_two - end_one).seconds
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
