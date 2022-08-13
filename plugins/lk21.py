@@ -43,7 +43,7 @@ async def dl_googledrive(bot, update):
         await bot.edit_message_text(
             chat_id=update.chat.id,
             message_id=processing.message_id,
-            text="<b>I couldn't find any video/file 🤕</b>"
+            text=Translation.NO_FILE_FOUND
         )
         return False
     file_title = response_gd["title"]
@@ -95,7 +95,7 @@ async def dl_fembed(bot, update):
         await bot.edit_message_text(
             chat_id=update.chat.id,
             message_id=processing.message_id,
-            text="<b>I couldn't find any video 🤕</b>"
+            text=Translation.NO_FILE_FOUND
         )
         return False
     inline_keyboard = []
@@ -167,7 +167,7 @@ async def dl_mediafire(bot, update):
         await bot.edit_message_text(
             chat_id=update.chat.id,
             message_id=msg_info.message_id,
-            text="<b>I couldn't find any video/file 🤕</b>"
+            text=Translation.NO_FILE_FOUND
         )
         return False
     dl_url, filename = response_mf.split("|")
