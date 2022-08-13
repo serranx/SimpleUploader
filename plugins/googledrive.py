@@ -2,16 +2,12 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, time, shutil, tldextract, asyncio, json, math
+import os, time, asyncio, json
 from config import Config
 from datetime import datetime
-from database.adduser import AddUser
 from translation import Translation
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-from pyrogram import Client as Clinton
-from database.access import clinton
 from helper_funcs.display_progress import humanbytes
-from helper_funcs.help_uploadbot import DownLoadFile
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 from plugins.custom_thumbnail import *
 
@@ -106,9 +102,8 @@ async def download(bot, update):
         )
         return False
     if t_response:
-        # logger.info(t_response)
         end_one = datetime.now()
-        time_taken_for_download = (end_one -start).seconds
+        time_taken_for_download = (end_one - start).seconds
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
