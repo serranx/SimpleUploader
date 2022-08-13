@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import sys, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, aiohttp, json, math
+import os, time, shutil, tldextract, asyncio, json, math
 from config import Config
 from datetime import datetime
 from database.adduser import AddUser
@@ -118,7 +118,7 @@ async def download(bot, update):
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
+                text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
                 message_id=dl_info.message_id
             )
         else:
