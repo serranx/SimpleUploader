@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, time, asyncio, json
+import os, time, asyncio, json, random, string
 from config import Config
 from database.adduser import AddUser
 from translation import Translation
@@ -17,7 +17,8 @@ async def echo(bot, update):
     await AddUser(bot, update)
     imog = await update.reply_text(
     	  "<b>Processing...⏳</b>", 
-    	  reply_to_message_id=update.message_id
+    	  quote=True
+    	  #reply_to_message_id=update.message_id
     )
     if os.path.exists(Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"):
         await bot.edit_message_text(
@@ -128,11 +129,18 @@ async def echo(bot, update):
         if "\n" in x_reponse:
             x_reponse, _ = x_reponse.split("\n")
         response_json = json.loads(x_reponse)
-        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + \
-            "/" + str(update.from_user.id) + ".json"
+        json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+        tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
+        if not os.path.isdir(tmp_directory_for_each_user):
+            os.makedirs(tmp_directory_for_each_user)
+        save_ytdl_json_path = tmp_directory_for_each_user + "/" + json_name + ".json"
         with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
             json.dump(response_json, outfile, ensure_ascii=False)
         inline_keyboard = []
+        await bot.send_document(
+        	  chat_id=update.chat.id,
+        	  document=save_ytdl_json_path
+        )
         duration = None
         if "duration" in response_json:
             duration = response_json["duration"]
@@ -146,10 +154,10 @@ async def echo(bot, update):
                 approx_file_size = ""
                 if "filesize" in formats:
                     approx_file_size = humanbytes(formats["filesize"])
-                cb_string_video = "{}|{}|{}".format(
-                    "video", format_id, format_ext)
-                cb_string_file = "{}|{}|{}".format(
-                    "file", format_id, format_ext)
+                cb_string_video = "{}|{}|{}|{}".format(
+                    "video", format_id, format_ext, json_name)
+                cb_string_file = "{}|{}|{}|{}".format(
+                    "file", format_id, format_ext, json_name)
                 if format_string is not None and not "audio only" in format_string:
                     ikeyboard = [
                         InlineKeyboardButton(
@@ -185,9 +193,9 @@ async def echo(bot, update):
                     ]
                 inline_keyboard.append(ikeyboard)
             if duration is not None:
-                cb_string_64 = "{}|{}|{}".format("audio", "64k", "mp3")
-                cb_string_128 = "{}|{}|{}".format("audio", "128k", "mp3")
-                cb_string = "{}|{}|{}".format("audio", "320k", "mp3")
+                cb_string_64 = "{}|{}|{}|{}".format("audio", "64k", "mp3", json_name)
+                cb_string_128 = "{}|{}|{}|{}".format("audio", "128k", "mp3", json_name)
+                cb_string = "{}|{}|{}|{}".format("audio", "320k", "mp3", json_name)
                 inline_keyboard.append([
                     InlineKeyboardButton(
                         "🎧 MP3 " + "(" + "64 kbps" + ")", callback_data=cb_string_64.encode("UTF-8")),
@@ -201,10 +209,10 @@ async def echo(bot, update):
         else:
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
-            cb_string_file = "{}|{}|{}".format(
-                "file", format_id, format_ext)
-            cb_string_video = "{}|{}|{}".format(
-                "video", format_id, format_ext)
+            cb_string_file = "{}|{}|{}|{}".format(
+                "file", format_id, format_ext, json_name)
+            cb_string_video = "{}|{}|{}|{}".format(
+                "video", format_id, format_ext, json_name)
             inline_keyboard.append([
                 InlineKeyboardButton(
                     "🎥 video - " + format_ext,
@@ -215,10 +223,10 @@ async def echo(bot, update):
                     callback_data=(cb_string_file).encode("UTF-8")
                 )
             ])
-            cb_string_file = "{}={}={}".format(
-                "file", format_id, format_ext)
-            cb_string_video = "{}={}={}".format(
-                "video", format_id, format_ext)
+            cb_string_file = "{}={}={}={}".format(
+                "file", format_id, format_ext, json_name)
+            cb_string_video = "{}={}={}={}".format(
+                "video", format_id, format_ext, json_name)
             inline_keyboard.append([
                 InlineKeyboardButton(
                     "🎥 video - " + format_ext,
@@ -241,10 +249,10 @@ async def echo(bot, update):
     else:
         # fallback for nonnumeric port a.k.a seedbox.io
         inline_keyboard = []
-        cb_string_file = "{}={}={}".format(
-            "file", "LFO", "NONE")
-        cb_string_video = "{}={}={}".format(
-            "video", "OFL", "ENON")
+        cb_string_file = "{}={}={}={}".format(
+            "file", "LFO", "NONE", json_name)
+        cb_string_video = "{}={}={}={}".format(
+            "video", "OFL", "NONE", json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
                 "🎥 video",
