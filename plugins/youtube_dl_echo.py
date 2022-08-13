@@ -20,13 +20,6 @@ async def echo(bot, update):
     	  quote=True
     	  #reply_to_message_id=update.message_id
     )
-    if os.path.exists(Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"):
-        await bot.edit_message_text(
-            text=Translation.WAIT_PROCESS_FINISH,
-            chat_id=update.chat.id,
-            message_id=imog.message_id
-        )
-        return False
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
