@@ -7,14 +7,10 @@ import time
 import math
 from datetime import datetime
 from bs4 import BeautifulSoup
-# the secret configuration specific things
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
 from plugins.custom_thumbnail import *
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
 
 async def get(url):
     headers = {
@@ -77,7 +73,7 @@ async def download(bot, update, dl_info):
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
+                text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
                 message_id=dl_info.message_id
             )
         else:
