@@ -134,12 +134,14 @@ async def echo(bot, update):
             for formats in response_json["formats"]:
                 format_id = formats.get("format_id")
                 format_string = formats.get("format_note")
+                format_ext = formats.get("ext")
+                approx_file_size = ""
                 if format_string is None:
                     format_string = formats.get("format")
                 if "x-matroska" in format_string:
                 	  format_string = "mkv"
-                format_ext = formats.get("ext")
-                approx_file_size = ""
+                if "unknown" in format_string:
+                	  format_string = format_ext
                 if "filesize" in formats:
                     approx_file_size = humanbytes(formats["filesize"])
                 cb_string_video = "{}|{}|{}|{}".format(
