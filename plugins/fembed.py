@@ -1,28 +1,14 @@
 
 import logging
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import asyncio
-import aiohttp
-import json
-import math
-import os
-import shutil
-import time
+import os, asyncio, aiohttp, json, math, time
 from datetime import datetime
-# the secret configuration specific things
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
 from plugins.custom_thumbnail import *
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
-from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
-# https://stackoverflow.com/a/37631799/4723940
-from PIL import Image
 
 async def download(bot, update):
     cb_data = update.data
@@ -101,7 +87,7 @@ async def download(bot, update):
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(time_taken_for_download, humanbytes(file_size)),
+                text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
                 message_id=msg_info.message_id
             )
         else:
@@ -251,21 +237,6 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
         )
 
                         if current_message != display_message:
-                            """
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=current_message,
-                                reply_markup=InlineKeyboardMarkup([
-                                    [
-                                        InlineKeyboardButton(
-                                            "Cancel download",
-                                            callback_data="{}|{}".format("cancel", file_name)
-                                        ),
-                                    ],
-                                ]),
-                            )
-                            """
                             await bot.edit_message_text(
                                 chat_id,
                                 message_id,
