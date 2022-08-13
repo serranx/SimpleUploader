@@ -2,28 +2,23 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-import sys, requests, urllib.parse, filetype, os, time, shutil, tldextract, asyncio, json, math
-
+import os, time, asyncio, json
 from config import Config
 from database.adduser import AddUser
 from translation import Translation
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram import filters
 from pyrogram import Client as Clinton
-from database.access import clinton
 from helper_funcs.display_progress import humanbytes
-from helper_funcs.help_uploadbot import DownLoadFile
-from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
-from hachoir.metadata import extractMetadata
-from hachoir.parser import createParser
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from pyrogram.errors import UserNotParticipant
 
 @Clinton.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com|drive\.google\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz"))
 async def echo(bot, update):
     await AddUser(bot, update)
-    imog = await update.reply_text("<b>Processing... ⏳</b>", reply_to_message_id=update.message_id)
+    imog = await update.reply_text(
+    	  "<b>Processing...⏳</b>", 
+    	  reply_to_message_id=update.message_id
+    )
     if os.path.exists(Config.DOWNLOAD_LOCATION + "/" + str(update.chat.id) + ".json"):
         await bot.edit_message_text(
             text=Translation.WAIT_PROCESS_FINISH,
@@ -103,7 +98,7 @@ async def echo(bot, update):
     # Wait for the subprocess to finish
     stdout, stderr = await process.communicate()
     await bot.edit_message_text(
-        text="<b>Processing... ⌛</b>",
+        text="<b>Processing...⌛</b>",
         chat_id=update.chat.id,
         message_id=imog.message_id
     )
