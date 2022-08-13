@@ -11,45 +11,20 @@ from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-@Clinton.on_message(filters.private & filters.command(["test"]))
+@Clinton.on_message(filters.private & filters.command(["files"]))
 async def test(bot, update):
     path = Config.DOWNLOAD_LOCATION + str(update.chat.id) + "/"
     try:
         files = os.listdir(path)
         joined_files = "\n".join(files)
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=str(joined_files),
-            parse_mode="html",
-            reply_to_message_id=update.message_id
+        await update.reply_text(
+            str(joined_files),
+            quote=True
         )
     except:
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text="No files found.",
-            parse_mode="html",
-            reply_to_message_id=update.message_id
-        )
-        
-@Clinton.on_message(filters.private & filters.command(["cancel"]))
-async def cancel_process(bot, update):
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.chat.id) + ".json"
-    if os.path.exists(save_ytdl_json_path):
-        os.remove(save_ytdl_json_path)
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.PROCESS_CANCELLED,
-            parse_mode="html",
-            disable_web_page_preview=True,
-            reply_to_message_id=update.message_id
-        )
-    else:
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.NO_PROCESS_FOUND,
-            parse_mode="html",
-            disable_web_page_preview=True,
-            reply_to_message_id=update.message_id
+        await update.reply_text(
+            "No files found.",
+            quote=True
         )
 
 @Clinton.on_message(filters.private & filters.reply & filters.text)
