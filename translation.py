@@ -35,17 +35,35 @@ You can now send a new URL."""
     NO_PROCESS_FOUND = """🤷‍♂️ No pending uploads were found. You can upload files by sending a link now!
     
 /help for more details."""
-    FORMAT_SELECTION = "<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>\n\n👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇\n(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option)\n\n<b>Don't select other format options if it shows any!</b>"
+    FORMAT_SELECTION = """<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>
+    
+👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇
+(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option)
+
+<b>Don't select other format options if it shows any!</b>"""
     SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
 URL | filename | username | password"""
-    DOWNLOAD_START = "<b>File detected: </b>{}\n\n<b>Downloading to my server...</b> 📥\n\nPlease wait uploading will start as soon as possible 😎"
+    DOWNLOAD_START = """<b>File detected:</b> {}
+    
+<b>Downloading to my server...</b> 📥
+
+Please wait uploading will start as soon as possible 😎"""
     UPLOAD_START = "<b>Uploading to Telegram...</b> 📤"
-    RCHD_TG_API_LIMIT = "<b>Downloaded in:</b> {} seconds.\n<b>Detected file size:</b> {}.\n\nSorry. But, I cannot upload files greater than 2GB due to Telegram API limitations 😕."
+    RCHD_TG_API_LIMIT = """<b>❗The file couldn't be uploaded❗</b>
+<b>🔹File detected:</b> {}
+<b>🔹Downloaded in:</b> {} seconds
+<b>🔹Detected file size:</b> {}
+    
+<i>Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.</i>"""
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
-    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = "<b>Downloaded in:</b> {} seconds.\n<b>Uploaded in:</b> {} seconds."
+    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<b>✅ File upload complete!</b>
+
+<b>🔹Downloaded in:</b> {} seconds.
+<b>🔹Uploaded in:</b> {} seconds."""
     SAVED_CUSTOM_THUMB_NAIL = "Custom video / file thumbnail saved. This image will be used in the video / file."
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
+    NO_FILE_FOUND = "<b>I couldn't find any video/file 🤕.</b>"
     NO_VOID_FORMAT_FOUND = """<b>I think you have entered an unaccessible url or a private url.</b>
 <i>Go check if you can access the content in the url from your browser first!</i>
 
