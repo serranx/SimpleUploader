@@ -148,8 +148,8 @@ async def echo(bot, update):
                 cb_string_file = "{}|{}|{}|{}".format(
                     "file", format_id, format_ext, json_name)
                 if format_string is not None and not "audio only" in format_string:
-                	  if re.match("youtube.com|youtu.be|yt.be", url) and not re.match("storyboard|low|medium", format_string):
-                	  	  continue
+                    if re.match("youtube.com|youtu.be|yt.be", url) and re.match("storyboard|low|medium", format_string):
+                        continue
                     ikeyboard = [
                         InlineKeyboardButton(
                             "🎥 video " + format_string + " " approx_file_size,
@@ -160,16 +160,6 @@ async def echo(bot, update):
                             callback_data=(cb_string_file).encode("UTF-8")
                         )
                     ]
-                    """if duration is not None:
-                        cb_string_video_message = "{}|{}|{}".format(
-                            "vm", format_id, format_ext)
-                        ikeyboard.append(
-                            InlineKeyboardButton(
-                                "VM",
-                                callback_data=(
-                                    cb_string_video_message).encode("UTF-8")
-                            )
-                        )"""
                 else:
                     # special weird case :\
                     ikeyboard = [
