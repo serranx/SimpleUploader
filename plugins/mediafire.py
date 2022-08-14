@@ -211,7 +211,6 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                         current_message = progress + """🔹<b>Finished ✅:</b> {0} of {1}
 🔹<b>Speed 🚀:</b> {2}/s
 🔹<b>Time left 🕒:</b> {3}""".format(
-            
                             humanbytes(downloaded),
                             humanbytes(total_length),
                             humanbytes(speed),
