@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, time, asyncio, json, random, string
+import os, re, time, asyncio, json, random, string
 from config import Config
 from database.adduser import AddUser
 from translation import Translation
@@ -148,10 +148,11 @@ async def echo(bot, update):
                 cb_string_file = "{}|{}|{}|{}".format(
                     "file", format_id, format_ext, json_name)
                 if format_string is not None and not "audio only" in format_string:
+                	  if re.match("youtube.com|youtu.be|yt.be", url) and not re.match("storyboard|low|medium", format_string):
+                	  	  continue
                     ikeyboard = [
                         InlineKeyboardButton(
-                            #"🎥 video " + format_string.split("-")[0] + " " + approx_file_size,
-                            "🎥 video " + format_string,
+                            "🎥 video " + format_string + " " approx_file_size,
                             callback_data=(cb_string_video).encode("UTF-8")
                         ),
                         InlineKeyboardButton(
