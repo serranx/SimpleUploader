@@ -18,7 +18,6 @@ async def echo(bot, update):
     imog = await update.reply_text(
     	  "<b>Processing...⏳</b>", 
     	  quote=True
-    	  #reply_to_message_id=update.message_id
     )
     youtube_dl_username = None
     youtube_dl_password = None
@@ -200,6 +199,7 @@ async def echo(bot, update):
         else:
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
+            """
             cb_string_file = "{}|{}|{}|{}".format(
                 "file", format_id, format_ext, json_name)
             cb_string_video = "{}|{}|{}|{}".format(
@@ -214,6 +214,7 @@ async def echo(bot, update):
                     callback_data=(cb_string_file).encode("UTF-8")
                 )
             ])
+            """
             cb_string_file = "{}={}={}={}".format(
                 "file", format_id, format_ext, json_name)
             cb_string_video = "{}={}={}={}".format(
