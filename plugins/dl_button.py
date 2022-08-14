@@ -12,10 +12,10 @@ from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, Tim
 
 async def ddl_call_back(bot, update):
     cb_data = update.data
-    tg_send_type, youtube_dl_format, youtube_dl_ext = cb_data.split("=")
+    tg_send_type, youtube_dl_format, youtube_dl_ext, json_name = cb_data.split("=")
     youtube_dl_url = update.message.reply_to_message.text
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
-        "/" + str(update.from_user.id) + ".jpg"
+         str(update.from_user.id) + "/" + json_name ".jpg"
     custom_file_name = os.path.basename(youtube_dl_url)
     if " * " in youtube_dl_url:
         url_parts = youtube_dl_url.split(" * ")
@@ -55,7 +55,7 @@ async def ddl_call_back(bot, update):
         chat_id=update.message.chat.id,
         message_id=update.message.message_id
     )
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + custom_file_name
@@ -81,7 +81,7 @@ async def ddl_call_back(bot, update):
             return False
     if os.path.exists(download_directory):
         end_one = datetime.now()
-        save_ytdl_json_path = Config.DOWNLOAD_LOCATION + "/" + str(update.message.chat.id) + ".json"
+        save_ytdl_json_path = tmp_directory_for_each_user + json_name + ".json"
         time_taken_for_download = (end_one - start).seconds
         if os.path.exists(save_ytdl_json_path):
             os.remove(save_ytdl_json_path)
