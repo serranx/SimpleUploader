@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import asyncio, aiohttp, os, time
+import asyncio, aiohttp, os, time, math
 from datetime import datetime
 from config import Config
 from translation import Translation
