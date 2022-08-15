@@ -8,7 +8,7 @@ class Config(object):
     API_HASH = os.environ.get("API_HASH")
     # the download location, where the HTTP Server runs
     DOWNLOAD_LOCATION = "./DOWNLOADS/"
-    VIDEO_FORMATS = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
+    VIDEO_FORMATS = ["mp4", "mkv", "webm", "avi", "wmv", "mov", "unknown_video"]
     AUDIO_FORMATS = ["mp3", "m4a"]
     # Telegram maximum file upload size
     MAX_FILE_SIZE = 50000000
