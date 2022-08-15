@@ -159,6 +159,17 @@ async def echo(bot, update):
                                 callback_data=(cb_string_file).encode("UTF-8")
                             )
                         ]
+                    elif format_ext in Config.AUDIO_FORMATS:
+                    	  ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎧 audio " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
                     else:
                   	    ikeyboard = [
                             InlineKeyboardButton(
@@ -176,6 +187,17 @@ async def echo(bot, update):
                             ),
                             InlineKeyboardButton(
                                 "📄 file " + format_ext,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    elif format_ext in Config.AUDIO_FORMATS:
+                    	  ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎧 audio " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
                                 callback_data=(cb_string_file).encode("UTF-8")
                             )
                         ]
@@ -245,6 +267,17 @@ async def echo(bot, update):
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
+            elif format_ext in Config.AUDIO_FORMATS:
+            	  ikeyboard = [
+                    InlineKeyboardButton(
+                        "🎧 audio " + format_ext + " " + approx_file_size,
+                        callback_data=(cb_string_video).encode("UTF-8")
+                    ),
+                    InlineKeyboardButton(
+                        "📄 file " + format_ext + " " + approx_file_size,
+                        callback_data=(cb_string_file).encode("UTF-8")
+                    )
+                ]
             else:
                 inline_keyboard.append([
                     InlineKeyboardButton(
