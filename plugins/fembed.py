@@ -33,9 +33,9 @@ async def download(bot, update):
         url_parts = update.message.reply_to_message.text.split(" * ")
         if len(url_parts) >= 2:
             custom_file_name = url_parts[1]
-    description = custom_file_name
     if not "." + youtube_dl_ext in custom_file_name:
         custom_file_name += '.' + youtube_dl_ext
+    description = custom_file_name.split("." + youtube_dl_ext)[0]
     logger.info(youtube_dl_url)
     logger.info(custom_file_name)
     start = datetime.now()
