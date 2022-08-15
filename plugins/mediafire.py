@@ -29,7 +29,7 @@ async def get(url):
 async def download(bot, update, dl_info):
     cb_data = update.data
     send_type, dl_url, filename = cb_data.split("|")
-    description = filename
+    description = filename.split("." + filename.split(".")[-1])[0]
     start = datetime.now()
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
