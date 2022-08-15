@@ -52,11 +52,11 @@ async def get(url):
 async def download(bot, update):
     cb_data = update.data
     tg_send_type, youtube_dl_url, filename = cb_data.split("|")
-    description = filename
+    description = filename.split("." + filename.split(".")[-1])[0]
     start = datetime.now()
     dl_info = await update.reply_text(
         text=Translation.DOWNLOAD_START.format(filename),
-        reply_to_message_id=update.message_id
+        quote=True
     )
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
@@ -152,24 +152,6 @@ async def download(bot, update):
                     thumb=thumbnail,
                     caption=description,
                     parse_mode="HTML",
-                    reply_to_message_id=update.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        dl_info,
-                        filename,
-                        start_time
-                    )
-                )
-            elif tg_send_type == "vm":
-                width, duration = await Mdata02(download_directory)
-                thumbnail = await Gthumb02(bot, update, duration, download_directory)
-                await bot.send_video_note(
-                    chat_id=update.chat.id,
-                    video_note=download_directory,
-                    duration=duration,
-                    length=width,
-                    thumb=thumb_image_path,
                     reply_to_message_id=update.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
