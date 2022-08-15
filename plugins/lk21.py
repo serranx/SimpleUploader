@@ -2,14 +2,13 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, re, random, string, json, requests
+import os, re, random, string, json
 from config import Config
 from translation import Translation
 from pyrogram import filters
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from helper_funcs.display_progress import humanbytes
 from . import googledrive
 from . import fembed
 from . import mediafire
@@ -88,13 +87,11 @@ async def dl_fembed(bot, update):
     item_id = 0
     try:
         for item in response_fembed:
-            content_length = requests.get(item["value"], stream=True).headers["Content-Length"]
             formats.append({
                 "id": item_id,
                 "ext": item["key"].split("/")[1],
                 "format": item["key"].split("/")[0],
                 "url": item["value"],
-                "filesize": humanbytes(int(content_length))
             })
             item_id += 1
     except:
@@ -117,11 +114,11 @@ async def dl_fembed(bot, update):
         cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
-                "🎥 video " + item["format"] + " " + item["filesize"],
+                "🎥 video " + item["format"],
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file " + item["ext"] + " " + item["filesize"],
+                "📄 file " + item["ext"],
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
