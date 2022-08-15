@@ -126,6 +126,7 @@ async def dl_fembed(bot, update):
     try:
         await bot.edit_message_text(
             chat_id=update.chat.id,
+            message_id=processing.message_id,
             text=Translation.FORMAT_SELECTION,
             reply_markup=InlineKeyboardMarkup(inline_keyboard),
             parse_mode="html"
