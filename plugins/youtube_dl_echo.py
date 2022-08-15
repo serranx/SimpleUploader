@@ -15,7 +15,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 @Clinton.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com|drive\.google\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz"))
 async def echo(bot, update):
     await AddUser(bot, update)
-    imog = await update.reply_text(
+    msg_info = await update.reply_text(
     	  "<b>Processing...⏳</b>", 
     	  quote=True
     )
@@ -93,9 +93,9 @@ async def echo(bot, update):
     await bot.edit_message_text(
         text="<b>Processing...⌛</b>",
         chat_id=update.chat.id,
-        message_id=imog.message_id
+        message_id=msg_info.message_id
     )
-    time.sleep(1.5)
+    time.sleep(1)
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
     # https://github.com/rg3/youtube-dl/issues/2630#issuecomment-38635239
@@ -104,13 +104,11 @@ async def echo(bot, update):
         error_message = e_response.replace("please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output.", "")
         if "This video is only available for registered users." in error_message:
             error_message += Translation.SET_CUSTOM_USERNAME_PASSWORD
-        await imog.delete(True)
-        await bot.send_message(
+        #await msg_info.delete(True)
+        await bot.edit_message_text(
             chat_id=update.chat.id,
-            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
-            reply_to_message_id=update.message_id,
-            parse_mode="html",
-            disable_web_page_preview=True
+            message_id=msg_info.message_id,
+            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message))
         )
         return
     if t_response:
@@ -150,28 +148,44 @@ async def echo(bot, update):
                 if format_string is not None and not "audio only" in format_string:
                     if re.match("(http(s)?):\/\/(www\.)?youtu(be)?\.(com|be)", url) and re.match("storyboard|low|medium", format_string):
                         continue
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "🎥 video " + format_string + " " + approx_file_size,
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + approx_file_size,
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
-                    ]
+                    if format_ext in Config.VIDEO_FORMATS:
+                    	  ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎥 video " + format_string + " " + approx_file_size,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    else:
+                  	    ikeyboard = [
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
                 else:
                     # special weird case :\
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "🎥 video - " + format_ext,
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "📄 file - " + format_ext,
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
-                    ]
+                    if format_ext in Config.VIDEO_FORMATS:
+                    	  ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎥 video " + format_string,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    else:
+                  	    ikeyboard = [
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
                 inline_keyboard.append(ikeyboard)
             if duration is not None:
                 cb_string_64 = "{}|{}|{}|{}".format("audio", "64k", "mp3", json_name)
@@ -188,6 +202,16 @@ async def echo(bot, update):
                         "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
+            total_length = ""
+            try:
+                total_length = requests.get(url, stream=True).headers["Content-length"]
+            except Exception as e:
+                await bot.edit_message_text(
+                    text=Translation.MAYBE_PRIVATE_URL.format(str(e)),
+                    chat_id=update.message.chat.id,
+                    message_id=msg_info.message_id
+                )
+                return
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             """
@@ -210,24 +234,31 @@ async def echo(bot, update):
                 "file", format_id, format_ext, json_name)
             cb_string_video = "{}={}={}={}".format(
                 "video", format_id, format_ext, json_name)
-            inline_keyboard.append([
-                InlineKeyboardButton(
-                    "🎥 video - " + format_ext,
-                    callback_data=(cb_string_video).encode("UTF-8")
-                ),
-                InlineKeyboardButton(
-                    "📃 file - " + format_ext,
-                    callback_data=(cb_string_file).encode("UTF-8")
-                )
-            ])
+            if format_ext in config.VIDEO_FORMATS:
+                inline_keyboard.append([
+                    InlineKeyboardButton(
+                        "🎥 video - " + format_ext + " " + humanbytes(int(total_length)),
+                        callback_data=(cb_string_video).encode("UTF-8")
+                    ),
+                    InlineKeyboardButton(
+                        "📃 file - " + format_ext + " " + humanbytes(int(total_length)),
+                        callback_data=(cb_string_file).encode("UTF-8")
+                    )
+                ])
+            else:
+                inline_keyboard.append([
+                    InlineKeyboardButton(
+                        "📃 file - " + format_ext + " " + humanbytes(int(total_length)),
+                        callback_data=(cb_string_file).encode("UTF-8")
+                    )
+                ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await imog.delete(True)
-        await bot.send_message(
+        await bot.edit_message_text(
             chat_id=update.chat.id,
+            message_id=msg_info.message_id,
             text=Translation.FORMAT_SELECTION,
             reply_markup=reply_markup,
-            parse_mode="html",
-            reply_to_message_id=update.message_id
+            parse_mode="html"
         )
     else:
         # fallback for nonnumeric port a.k.a seedbox.io
@@ -247,11 +278,10 @@ async def echo(bot, update):
             )
         ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await imog.delete(True)
-        await bot.send_message(
+        await bot.edit_message_text(
             chat_id=update.chat.id,
+            message_id=msg_info.message_id,
             text=Translation.FORMAT_SELECTION,
             reply_markup=reply_markup,
-            parse_mode="html",
-            reply_to_message_id=update.message_id
+            parse_mode="html"
         )
