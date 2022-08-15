@@ -204,11 +204,11 @@ async def echo(bot, update):
         else:
             total_length = ""
             try:
-                total_length = requests.get(url, stream=True).headers["Content-length"]
+                total_length = requests.get(url, stream=True).headers["Content-Length"]
             except Exception as e:
                 await bot.edit_message_text(
                     text=Translation.MAYBE_PRIVATE_URL.format(str(e)),
-                    chat_id=update.message.chat.id,
+                    chat_id=update.chat.id,
                     message_id=msg_info.message_id
                 )
                 return
