@@ -24,11 +24,11 @@ Send me a direct link and I will upload it to telegram as a file/video.</b>
     ADD_CAPTION_HELP = """Select an uploaded file/video or forward me <b>Any Telegram File</b> and just write the text you want to be on the file <b>as a reply to the file</b> and the text you wrote will be attached as the caption! 🤩
     
 Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> 👇"""
-    INCORRECT_REQUEST = """Please make sure you submit your request correctly.
+    INCORRECT_REQUEST = """<b>❗Please make sure you submit your request correctly❗</b>
     
-/help for more details."""
+/help for more details!"""
     MAYBE_PRIVATE_URL = """<b>❗ SOMETHING WENT WRONG ❗</b>
-<i>I think you have sent a private link (which only works with your IP).</i>
+I think you have sent a private link (which only works with your IP).
 
 <b>Additional info:</b>
 {}"""
