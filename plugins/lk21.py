@@ -4,7 +4,6 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(leve
 logger = logging.getLogger(__name__)
 import os, re, random, string, json
 from config import Config
-# the Strings used for this "thing"
 from translation import Translation
 from pyrogram import filters
 from pyrogram import Client as Clinton
@@ -17,12 +16,10 @@ import lk21
 
 @Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
 async def dl_googledrive(bot, update):
-    video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
-    audio_formats = ["mp3", "m4a"]
     custom_filename = None
     processing = await update.reply_text(
         "<b>Processing... ⏳</b>", 
-        reply_to_message_id=update.message_id
+        quote=True
     )
     if " * " in update.text:
         try:
@@ -36,6 +33,13 @@ async def dl_googledrive(bot, update):
             return False
     else:
         url = update.text
+    if "folders" in url:
+        await bot.edit_message_text(
+            text="<b>I'm sorry, but I can't upload folders 😕</b>",
+            chat_id=update.chat.id,
+            message_id=processing.message_id
+        )
+        return
     try:
         response_gd = await googledrive.get(url)
     except:
@@ -55,9 +59,9 @@ async def dl_googledrive(bot, update):
             filename = custom_filename + "." + ext
     else:
         filename = file_title
-    if ext in video_formats:
+    if ext in Config.VIDEO_FORMATS:
         send_type = "video"
-    elif ext in audio_formats:
+    elif ext in Config.AUDIO_FORMATS:
         send_type = "audio"
     else:
         send_type = "file"
@@ -69,7 +73,7 @@ async def dl_googledrive(bot, update):
 async def dl_fembed(bot, update):
     processing = await update.reply_text(
         "<b>Processing... ⏳</b>", 
-        reply_to_message_id=update.message_id
+        quote=True
     )
     bypasser = lk21.Bypass()
     if " * " in update.text:
@@ -118,30 +122,27 @@ async def dl_fembed(bot, update):
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
-    await processing.delete(True)
+    #await processing.delete(True)
     try:
-        await bot.send_message(
+        await bot.edit_message_text(
             chat_id=update.chat.id,
             text=Translation.FORMAT_SELECTION,
             reply_markup=InlineKeyboardMarkup(inline_keyboard),
-            parse_mode="html",
-            reply_to_message_id=update.message_id
+            parse_mode="html"
         )
     except Exception as e:
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=str(e)
+        await update.reply_text(
+            text=str(e),
+            quote=True
         )
         return False
     
-@Clinton.on_message(filters.regex(pattern="\.mediafire\.com/"))
+@Clinton.on_message(filters.regex(pattern="mediafire\.com/"))
 async def dl_mediafire(bot, update):
-    video_formats = ["mp4", "mkv", "webm", "avi", "wmv", "mov"]
-    audio_formats = ["mp3", "m4a"]
     custom_filename = None
     msg_info = await update.reply_text(
         "<b>Processing... ⏳</b>",
-        reply_to_message_id=update.message_id
+        quote=True
     )
     if " * " in update.text:
         try:
@@ -178,12 +179,11 @@ async def dl_mediafire(bot, update):
             filename = custom_filename
         else:
             filename = custom_filename + "." + ext
-    if ext in video_formats:
+    if ext in Config.VIDEO_FORMATS:
         send_type = "video"
-    elif ext in audio_formats:
+    elif ext in Config.AUDIO_FORMATS:
         send_type = "audio"
     else:
         send_type = "file"
     update.data = "{}|{}|{}".format(send_type, dl_url, filename)
-    #await processing.delete(True)
     await mediafire.download(bot, update, msg_info)
