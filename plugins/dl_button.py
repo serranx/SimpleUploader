@@ -140,24 +140,6 @@ async def ddl_call_back(bot, update):
                         start_time
                     )
                 )
-            elif tg_send_type == "vm":
-                width, duration = await Mdata02(download_directory)
-                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                await bot.send_video_note(
-                    chat_id=update.message.chat.id,
-                    video_note=download_directory,
-                    duration=duration,
-                    length=width,
-                    thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        update.message,
-                        custom_file_name,
-                        start_time
-                    )
-                )
             elif tg_send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
                 thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
@@ -209,8 +191,15 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
     downloaded = 0
     display_message = ""
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
-        total_length = int(response.headers["Content-Length"])
-        content_type = response.headers["Content-Type"]
+        """try:
+            total_length = int(response.headers["Content-Length"])
+            content_type = response.headers["Content-Type"]
+        except Exception as e:
+            await bot.edit_message_text(
+                text=,
+                chat_id=update.message.chat.id,
+                message_id=update.message.message_id,
+            )"""
         if "text" in content_type and total_length < 500:
             return await response.release()
         with open(file_name, "wb") as f_handle:
