@@ -78,7 +78,7 @@ async def ddl_call_back(bot, update):
                 chat_id=update.message.chat.id,
                 message_id=update.message.message_id
             )
-            return False
+            return
     if os.path.exists(download_directory):
         end_one = datetime.now()
         save_ytdl_json_path = tmp_directory_for_each_user + json_name + ".json"
