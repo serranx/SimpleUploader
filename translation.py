@@ -62,7 +62,8 @@ Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
     NO_VOID_FORMAT_FOUND = """<b>❗I think you have entered an unaccessible URL or a private URL❗</b>
 Go check if you can access the content in the URL from your browser first!
 
-<b>YouTubeDL</b> said: {}"""
+<b>YouTubeDL said:</b>
+{}"""
     HELP_USER = """<b>How to use me?</b> 🤔
 Follow these steps! 👇
     
