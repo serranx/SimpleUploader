@@ -27,6 +27,11 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     INCORRECT_REQUEST = """Please make sure you submit your request correctly.
     
 /help for more details."""
+    MAYBE_PRIVATE_URL = """<b>❗ SOMETHING WENT WRONG ❗</b>
+<i>I think you have sent a private link (which only works with your IP).</i>
+
+<b>Additional info:</b>
+{}"""
     FORMAT_SELECTION = """<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>
     
 👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇
