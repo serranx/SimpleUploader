@@ -234,7 +234,7 @@ async def echo(bot, update):
                 "file", format_id, format_ext, json_name)
             cb_string_video = "{}={}={}={}".format(
                 "video", format_id, format_ext, json_name)
-            if format_ext in config.VIDEO_FORMATS:
+            if format_ext in Config.VIDEO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
                         "🎥 video - " + format_ext + " " + humanbytes(int(total_length)),
