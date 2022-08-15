@@ -231,7 +231,7 @@ async def echo(bot, update):
                 total_length = requests.get(url, stream=True).headers["Content-Length"]
             except Exception as e:
                 await bot.edit_message_text(
-                    text=Translation.MAYBE_PRIVATE_URL.format(str(e)),
+                    text=Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
                     chat_id=update.chat.id,
                     message_id=msg_info.message_id
                 )
