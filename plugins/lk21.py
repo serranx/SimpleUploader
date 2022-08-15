@@ -35,7 +35,7 @@ async def dl_googledrive(bot, update):
         url = update.text
     if "folders" in url:
         await bot.edit_message_text(
-            text="<b>I'm sorry, but I can't upload folders 😕</b>",
+            text="<b>Sorry, but I can't upload folders 😕</b>",
             chat_id=update.chat.id,
             message_id=processing.message_id
         )
@@ -48,7 +48,7 @@ async def dl_googledrive(bot, update):
             message_id=processing.message_id,
             text=Translation.NO_FILE_FOUND
         )
-        return False
+        return
     file_title = response_gd["title"]
     dl_url = response_gd["url"]
     ext = response_gd["ext"]
@@ -100,7 +100,7 @@ async def dl_fembed(bot, update):
             message_id=processing.message_id,
             text=Translation.NO_FILE_FOUND
         )
-        return False
+        return
     inline_keyboard = []
     json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
@@ -135,7 +135,7 @@ async def dl_fembed(bot, update):
             text=str(e),
             quote=True
         )
-        return False
+        return
     
 @Clinton.on_message(filters.regex(pattern="mediafire\.com/"))
 async def dl_mediafire(bot, update):
@@ -153,7 +153,7 @@ async def dl_mediafire(bot, update):
                 chat_id=update.chat.id,
                 message_id=msg_info.message_id
             )
-            return False
+            return
     else:
         url = update.text
     if re.search("download[0-9]*\.mediafire\.com", url):
@@ -169,7 +169,7 @@ async def dl_mediafire(bot, update):
             message_id=msg_info.message_id,
             text=Translation.NO_FILE_FOUND
         )
-        return False
+        return
     dl_url, filename = response_mf.split("|")
     ext = filename.split(".")[-1]
     if custom_filename is not None:
