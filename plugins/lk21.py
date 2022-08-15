@@ -88,7 +88,7 @@ async def dl_fembed(bot, update):
     item_id = 0
     try:
         for item in response_fembed:
-        	  content_length = requests.get(item["value"], stream=True).headers["Content-Length"]
+            content_length = requests.get(item["value"], stream=True).headers["Content-Length"]
             formats.append({
                 "id": item_id,
                 "ext": item["key"].split("/")[1],
