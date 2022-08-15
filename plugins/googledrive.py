@@ -53,7 +53,6 @@ async def download(bot, update):
     cb_data = update.data
     tg_send_type, youtube_dl_url, filename = cb_data.split("|")
     description = filename.split("." + filename.split(".")[-1])[0]
-    start = datetime.now()
     dl_info = await update.reply_text(
         text=Translation.DOWNLOAD_START.format(filename),
         quote=True
@@ -86,6 +85,7 @@ async def download(bot, update):
         await update.reply_text(
             str(e)
         )
+        return
     # Wait for the subprocess to finish
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
