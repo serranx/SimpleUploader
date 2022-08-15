@@ -17,7 +17,7 @@ import lk21
 @Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
 async def dl_googledrive(bot, update):
     custom_filename = None
-    processing = await update.reply_text(
+    msg_info = await update.reply_text(
         "<b>Processing... ⏳</b>", 
         quote=True
     )
@@ -28,7 +28,7 @@ async def dl_googledrive(bot, update):
             await bot.edit_message_text(
                 text=Translation.INCORRECT_REQUEST,
                 chat_id=update.chat.id,
-                message_id=processing.message_id
+                message_id=msg_info.message_id
             )
             return False
     else:
@@ -37,7 +37,7 @@ async def dl_googledrive(bot, update):
         await bot.edit_message_text(
             text="<b>Sorry, but I can't upload folders 😕</b>",
             chat_id=update.chat.id,
-            message_id=processing.message_id
+            message_id=msg_info.message_id
         )
         return
     try:
@@ -45,7 +45,7 @@ async def dl_googledrive(bot, update):
     except:
         await bot.edit_message_text(
             chat_id=update.chat.id,
-            message_id=processing.message_id,
+            message_id=msg_info.message_id,
             text=Translation.NO_FILE_FOUND
         )
         return
@@ -66,8 +66,8 @@ async def dl_googledrive(bot, update):
     else:
         send_type = "file"
     update.data = "{}|{}|{}".format(send_type, url, filename)
-    await processing.delete(True)
-    await googledrive.download(bot, update)
+    #await processing.delete(True)
+    await googledrive.download(bot, update, msg_info)
 
 @Clinton.on_message(filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|embedsito\.com|owodeuwu\.xyz|plusto\.link"))
 async def dl_fembed(bot, update):
