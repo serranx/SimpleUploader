@@ -2,13 +2,14 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, re, random, string, json
+import os, re, random, string, json, requests
 from config import Config
 from translation import Translation
 from pyrogram import filters
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from helper_funcs.display_progress import humanbytes
 from . import googledrive
 from . import fembed
 from . import mediafire
@@ -87,11 +88,22 @@ async def dl_fembed(bot, update):
     item_id = 0
     try:
         for item in response_fembed:
+          	total_length = ""
+            try:
+                total_length = requests.get(item["value"], stream=True).headers["Content-Length"]
+            except Exception as e:
+                await bot.edit_message_text(
+                    text=Translation.MAYBE_PRIVATE_URL.format(str(e)),
+                    chat_id=update.chat.id,
+                    message_id=msg_info.message_id
+                )
+                return
             formats.append({
                 "id": item_id,
                 "ext": item["key"].split("/")[1],
                 "format": item["key"].split("/")[0],
-                "url": item["value"]
+                "url": item["value"],
+                "filesize": humanbytes(total_length)
             })
             item_id += 1
     except:
@@ -114,15 +126,14 @@ async def dl_fembed(bot, update):
         cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
-                "🎥 video " + item["format"],
+                "🎥 video " + item["format"] + " " + item["filesize"],
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file " + item["ext"],
+                "📄 file " + item["ext"] + " " + item["filesize"],
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
-    #await processing.delete(True)
     try:
         await bot.edit_message_text(
             chat_id=update.chat.id,
