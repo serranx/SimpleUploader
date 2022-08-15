@@ -26,6 +26,7 @@ async def test(bot, update):
             "No files found.",
             quote=True
         )
+        return
 
 @Clinton.on_message(filters.private & filters.reply & filters.text)
 async def edit_caption(bot, update):
