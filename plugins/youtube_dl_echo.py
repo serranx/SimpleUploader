@@ -108,7 +108,8 @@ async def echo(bot, update):
         await bot.edit_message_text(
             chat_id=update.chat.id,
             message_id=msg_info.message_id,
-            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message))
+            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
+            disable_web_page_preview=True
         )
         return
     if t_response:
