@@ -191,15 +191,8 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
     downloaded = 0
     display_message = ""
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
-        """try:
-            total_length = int(response.headers["Content-Length"])
-            content_type = response.headers["Content-Type"]
-        except Exception as e:
-            await bot.edit_message_text(
-                text=,
-                chat_id=update.message.chat.id,
-                message_id=update.message.message_id,
-            )"""
+        total_length = int(response.headers["Content-Length"])
+        content_type = response.headers["Content-Type"]
         if "text" in content_type and total_length < 500:
             return await response.release()
         with open(file_name, "wb") as f_handle:
