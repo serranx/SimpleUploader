@@ -88,16 +88,7 @@ async def dl_fembed(bot, update):
     item_id = 0
     try:
         for item in response_fembed:
-          	total_length = ""
-            try:
-                total_length = requests.get(item["value"], stream=True).headers["Content-Length"]
-            except Exception as e:
-                await bot.edit_message_text(
-                    text=Translation.MAYBE_PRIVATE_URL.format(str(e)),
-                    chat_id=update.chat.id,
-                    message_id=msg_info.message_id
-                )
-                return
+          	total_length = requests.get(item["value"], stream=True).headers["Content-Length"]
             formats.append({
                 "id": item_id,
                 "ext": item["key"].split("/")[1],
