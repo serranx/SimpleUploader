@@ -27,11 +27,6 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     INCORRECT_REQUEST = """<b>❗Please make sure you submit your request correctly❗</b>
     
 /help for more details!"""
-    MAYBE_PRIVATE_URL = """<b>❗ SOMETHING WENT WRONG ❗</b>
-I think you have sent a private link (which only works with your IP).
-
-<b>Additional info:</b>
-{}"""
     FORMAT_SELECTION = """<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>
     
 👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇
@@ -59,10 +54,10 @@ Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_FILE_FOUND = "<b>I couldn't find any video/file 🤕</b>"
-    NO_VOID_FORMAT_FOUND = """<b>❗I think you have entered an unaccessible URL or a private URL❗</b>
-Go check if you can access the content in the URL from your browser first!
+    NO_VOID_FORMAT_FOUND = """<b>❗ SOMETHING WENT WRONG ❗</b>
+I think you have entered an unaccessible URL or a private URL (which only works with your IP).
 
-<b>YouTubeDL said:</b>
+<b>Additional info:</b>
 {}"""
     HELP_USER = """<b>How to use me?</b> 🤔
 Follow these steps! 👇
