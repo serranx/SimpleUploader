@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, re, time, asyncio, json, random, string
+import os, re, time, asyncio, json, random, string, requests
 from config import Config
 from database.adduser import AddUser
 from translation import Translation
