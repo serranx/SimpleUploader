@@ -86,10 +86,6 @@ async def dl_fembed(bot, update):
     formats = []
     item_id = 0
     try:
-        await update.reply_text(
-            str(response_fembed),
-            quote=True
-        )
         req = requests.get(url)
         soup = BeautifulSoup(req.content, 'html.parser')
         filename = soup.find("h1", class_="title").get_text()
