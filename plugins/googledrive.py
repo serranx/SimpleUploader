@@ -48,13 +48,14 @@ async def get(url):
     response_json["title"] = title
     return response_json
         
-async def download(bot, update):
+async def download(bot, update, msg_info):
     cb_data = update.data
     tg_send_type, youtube_dl_url, filename = cb_data.split("|")
     description = filename.split("." + filename.split(".")[-1])[0]
-    dl_info = await update.reply_text(
-        text=Translation.DOWNLOAD_START.format(filename),
-        quote=True
+    await bot.edit_message_text(
+    	  chat_id=update.chat.id,
+    	  message_id=msg_info.message_id,
+        text=Translation.DOWNLOAD_START.format(filename)
     )
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
@@ -94,7 +95,7 @@ async def download(bot, update):
         error_message = e_response.replace(ad_string_to_replace, "")
         await bot.edit_message_text(
             chat_id=update.chat.id,
-            message_id=dl_info.message_id,
+            message_id=msg_info.message_id,
             text=error_message
         )
         return
@@ -111,7 +112,7 @@ async def download(bot, update):
             await bot.edit_message_text(
                 chat_id=update.chat.id,
                 text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
-                message_id=dl_info.message_id
+                message_id=msg_info.message_id
             )
             os.remove(download_directory)
             return
@@ -119,7 +120,7 @@ async def download(bot, update):
             await bot.edit_message_text(
                 text=Translation.UPLOAD_START,
                 chat_id=update.chat.id,
-                message_id=dl_info.message_id
+                message_id=msg_info.message_id
             )
             start_time = time.time()
             # try to upload file
@@ -137,7 +138,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        dl_info,
+                        msg_info,
                         filename,
                         start_time
                     )
@@ -154,7 +155,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        dl_info,
+                        msg_info,
                         filename,
                         start_time
                     )
@@ -176,7 +177,7 @@ async def download(bot, update):
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        dl_info,
+                        msg_info,
                         filename,
                         start_time
                     )
@@ -193,7 +194,7 @@ async def download(bot, update):
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
                 chat_id=update.chat.id,
-                message_id=dl_info.message_id,
+                message_id=msg_info.message_id,
                 disable_web_page_preview=True
             )
             logger.info("✅ " + filename)
