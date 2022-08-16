@@ -28,7 +28,8 @@ async def download(bot, update):
         return
     youtube_dl_url = response_json[int(source)]["url"]
     youtube_dl_ext = response_json[int(source)]["ext"]
-    custom_file_name = os.path.basename(youtube_dl_url)
+    custom_file_name = response_json[int(source)]["title"]
+    #custom_file_name = os.path.basename(youtube_dl_url)
     if " * " in update.message.reply_to_message.text:
         url_parts = update.message.reply_to_message.text.split(" * ")
         if len(url_parts) >= 2:
