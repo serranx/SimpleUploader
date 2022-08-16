@@ -90,8 +90,6 @@ async def download(bot, update):
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
-    #logger.info(e_response)
-    #logger.info(t_response)
     ad_string_to_replace = "please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output."
     if e_response and ad_string_to_replace in e_response:
         error_message = e_response.replace(ad_string_to_replace, "")
@@ -116,13 +114,14 @@ async def download(bot, update):
                 text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
                 message_id=dl_info.message_id
             )
+            os.remove(download_directory)
+            return
         else:
             await bot.edit_message_text(
                 text=Translation.UPLOAD_START,
                 chat_id=update.chat.id,
                 message_id=dl_info.message_id
             )
-            # ref: message from @Sources_codes
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
