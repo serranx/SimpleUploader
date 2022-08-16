@@ -24,5 +24,5 @@ async def get(url):
     soup = BeautifulSoup(req.content, 'html.parser')
     #dl_url = soup.find_all("https://larecontent.com/download").get("href")
     dl_url = soup.find_all("https://larecontent.com/download")
-    filename = soup.find("h2", class_="mb-0 text-break file-title").get_text()
+    filename = "idjfbxno"
     return "{}|{}".format(dl_url, filename)
