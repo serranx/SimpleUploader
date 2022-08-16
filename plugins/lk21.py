@@ -19,7 +19,7 @@ import lk21
 async def dl_googledrive(bot, update):
     custom_filename = None
     msg_info = await update.reply_text(
-        "<b>Processing... ⏳</b>", 
+        "<b>Processing...⏳</b>", 
         quote=True
     )
     if " * " in update.text:
