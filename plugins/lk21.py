@@ -78,10 +78,10 @@ async def dl_fembed(bot, update):
     bypasser = lk21.Bypass()
     if " * " in update.text:
         url = update.text.split(" * ")[0]
-        url = "https://www.fembed.com/f/" + url.split("/")[-1]
+        url = "https://fembed.com/f/" + url.split("/")[-1]
     else:
         url = update.text
-        url = "https://www.fembed.com/f/" + url.split("/")[-1]
+        url = "https://fembed.com/f/" + url.split("/")[-1]
     response_fembed = bypasser.bypass_url(url)
     formats = []
     item_id = 0
@@ -94,10 +94,6 @@ async def dl_fembed(bot, update):
         soup = BeautifulSoup(req.content, 'html.parser')
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
-        await update.reply_text(
-            str(filename),
-            quote=True
-        )
         for item in response_fembed:
             formats.append({
                 "id": item_id,
