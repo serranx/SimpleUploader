@@ -54,7 +54,7 @@ Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_FILE_FOUND = """<b>❗I couldn't find any video/file❗</b>
-Go check if you can access the content in the url from your browser first!"""
+Go check if you can access the content in the URL from your browser first!"""
     NO_VOID_FORMAT_FOUND = """<b>❗ SOMETHING WENT WRONG ❗</b>
 I think you have entered an unaccessible URL or a private URL (which only works with your IP).
 
