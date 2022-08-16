@@ -54,7 +54,7 @@ async def download(bot, update, dl_info):
                 chat_id=update.chat.id,
                 message_id=dl_info.message_id
             )
-            return False
+            return
     if os.path.exists(download_directory):
         end_one = datetime.now()
         time_taken_for_download = (end_one - start).seconds
@@ -68,7 +68,6 @@ async def download(bot, update, dl_info):
             file_size = os.stat(download_directory).st_size
         except FileNotFoundError as exc:
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
-            # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
@@ -76,8 +75,9 @@ async def download(bot, update, dl_info):
                 text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
                 message_id=dl_info.message_id
             )
+            os.remove(download_directory)
+            return
         else:
-            # ref: message from @SOURCES_CODES
             start_time = time.time()
             # try to upload file
             if send_type == "audio":
