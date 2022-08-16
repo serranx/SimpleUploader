@@ -50,7 +50,6 @@ async def youtube_dl_call_back(bot, update):
             youtube_dl_url = youtube_dl_url.strip()
         if custom_file_name is not None:
             custom_file_name = custom_file_name.strip()
-        # https://stackoverflow.com/a/761825/4723940
         if youtube_dl_username is not None:
             youtube_dl_username = youtube_dl_username.strip()
         if youtube_dl_password is not None:
@@ -142,9 +141,8 @@ async def youtube_dl_call_back(bot, update):
             message_id=update.message.message_id,
             text=error_message
         )
-        return False
+        return
     if t_response:
-        # logger.info(t_response)
         os.remove(save_ytdl_json_path)
         end_one = datetime.now()
         time_taken_for_download = (end_one - start).seconds
@@ -155,7 +153,6 @@ async def youtube_dl_call_back(bot, update):
             _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
             download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
             os.rename(_download_directory, download_directory)
-            # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
@@ -163,13 +160,14 @@ async def youtube_dl_call_back(bot, update):
                 text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
                 message_id=update.message.message_id
             )
+            os.remove(download_directory)
+            return
         else:
             await bot.edit_message_text(
                 text=Translation.UPLOAD_START,
                 chat_id=update.message.chat.id,
                 message_id=update.message.message_id
             )
-            # ref: message from @Sources_codes
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
