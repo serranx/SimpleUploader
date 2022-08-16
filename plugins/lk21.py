@@ -10,6 +10,7 @@ from pyrogram import filters
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from . import streamlare
 from . import googledrive
 from . import fembed
 from . import mediafire
