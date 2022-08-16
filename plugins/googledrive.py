@@ -31,7 +31,6 @@ async def get(url):
         ]
     process = await asyncio.create_subprocess_exec(
         *command_to_exec,
-        # stdout must a pipe to be accessible as process.stdout
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -98,7 +97,7 @@ async def download(bot, update):
             message_id=dl_info.message_id,
             text=error_message
         )
-        return False
+        return
     if t_response:
         end_one = datetime.now()
         time_taken_for_download = (end_one - start).seconds
