@@ -25,7 +25,7 @@ async def download(bot, update):
             chat_id=update.message.chat.id,
             text=str(e)
         )
-        return False
+        return
     youtube_dl_url = response_json[int(source)]["url"]
     youtube_dl_ext = response_json[int(source)]["ext"]
     custom_file_name = os.path.basename(youtube_dl_url)
@@ -67,7 +67,7 @@ async def download(bot, update):
                 chat_id=update.message.chat.id,
                 message_id=msg_info.message_id
             )
-            return False
+            return
     if os.path.exists(download_directory):
         if os.path.exists(save_ytdl_json_path):
             os.remove(save_ytdl_json_path)
@@ -82,7 +82,6 @@ async def download(bot, update):
             file_size = os.stat(download_directory).st_size
         except FileNotFoundError as exc:
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
-            # https://stackoverflow.com/a/678242/4723940
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
@@ -90,8 +89,9 @@ async def download(bot, update):
                 text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
                 message_id=msg_info.message_id
             )
+            os.remove(download_directory)
+            return
         else:
-            # ref: message from @SOURCES_CODES
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
@@ -119,24 +119,6 @@ async def download(bot, update):
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
-                    progress=progress_for_pyrogram,
-                    progress_args=(
-                        Translation.UPLOAD_START,
-                        msg_info,
-                        custom_file_name,
-                        start_time
-                    )
-                )
-            elif tg_send_type == "vm":
-                width, duration = await Mdata02(download_directory)
-                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
-                await bot.send_video_note(
-                    chat_id=update.message.chat.id,
-                    video_note=download_directory,
-                    duration=duration,
-                    length=width,
-                    thumb=thumb_image_path,
                     reply_to_message_id=update.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
