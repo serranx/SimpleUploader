@@ -66,7 +66,6 @@ async def dl_googledrive(bot, update):
     else:
         send_type = "file"
     update.data = "{}|{}|{}".format(send_type, url, filename)
-    #await processing.delete(True)
     await googledrive.download(bot, update, msg_info)
 
 @Clinton.on_message(filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|embedsito\.com|owodeuwu\.xyz|plusto\.link"))
@@ -78,20 +77,33 @@ async def dl_fembed(bot, update):
     bypasser = lk21.Bypass()
     if " * " in update.text:
         url = update.text.split(" * ")[0]
-        url = "https://fembed.com/f/" + url.split("/")[-1]
+        url = "https://www.fembed.com/f/" + url.split("/")[-1]
     else:
         url = update.text
-        url = "https://fembed.com/f/" + url.split("/")[-1]
+        url = "https://www.fembed.com/f/" + url.split("/")[-1]
     response_fembed = bypasser.bypass_url(url)
     formats = []
     item_id = 0
     try:
+    	  await update.reply_text(
+    	  	  str(response_fembed),
+    	  	  quote=True
+    	  )
+        req = requests.get(url)
+        soup = BeautifulSoup(req.content, 'html.parser')
+        filename = soup.find("h1", class_="title").get_text()
+        filename = filename.split("." + filename.split(".")[-1])[0]
+        await update.reply_text(
+    	  	  str(filename),
+    	  	  quote=True
+    	  )
         for item in response_fembed:
             formats.append({
                 "id": item_id,
-                "ext": item["key"].split("/")[1],
+                "title": filename,
                 "format": item["key"].split("/")[0],
-                "url": item["value"],
+                "ext": item["key"].split("/")[1],
+                "url": item["value"]
             })
             item_id += 1
     except:
