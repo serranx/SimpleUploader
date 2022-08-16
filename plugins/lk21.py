@@ -15,6 +15,53 @@ from . import fembed
 from . import mediafire
 import lk21
 
+@Clinton.on_message(filters.regex(pattern="slwatch.co"))
+async def dl_streamlare(bot, message):
+    custom_filename = None
+    msg_info = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_filename = message.text.split(" * ")
+        except:
+            await bot.edit_message_text(
+                text=Translation.INCORRECT_REQUEST,
+                chat_id=message.chat.id,
+                message_id=msg_info.message_id
+            )
+            return
+    else:
+        url = message.text
+    try:
+        response_sl = await streamlare.get(url)
+        await bot.edit_message_text(
+            chat_id=message.chat.id,
+            message_id=msg_info.message_id,
+            text=str(response_sl)
+        )
+        return
+    except Exception as e:
+        await bot.edit_message_text(
+            chat_id=message.chat.id,
+            message_id=msg_info.message_id,
+            text=str(e)
+        )
+        return
+    file_title = response_sl["title"]
+    dl_url = response_sl["url"]
+    ext = response_sl["ext"]
+    if custom_filename is not None:
+        if custom_filename.endswith("." + ext):
+            filename = custom_filename
+        else:
+            filename = custom_filename + "." + ext
+    else:
+        filename = file_title
+    message.data = "{}|{}".format(url, filename)
+    #await streamlare.download(bot, message, msg_info)
+
 @Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
 async def dl_googledrive(bot, update):
     custom_filename = None
@@ -31,7 +78,7 @@ async def dl_googledrive(bot, update):
                 chat_id=update.chat.id,
                 message_id=msg_info.message_id
             )
-            return False
+            return
     else:
         url = update.text
     if "folders" in url:
@@ -51,7 +98,6 @@ async def dl_googledrive(bot, update):
         )
         return
     file_title = response_gd["title"]
-    dl_url = response_gd["url"]
     ext = response_gd["ext"]
     if custom_filename is not None:
         if custom_filename.endswith("." + ext):
