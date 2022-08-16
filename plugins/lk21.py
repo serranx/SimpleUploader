@@ -2,7 +2,8 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, re, random, string, json
+import os, re, random, string, json, requests
+from bs4 import BeautifulSoup
 from config import Config
 from translation import Translation
 from pyrogram import filters
