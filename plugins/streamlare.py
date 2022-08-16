@@ -22,6 +22,7 @@ async def get(url):
         }
     req = requests.get(url, headers)
     time.sleep(2)
+    print(req.content)
     soup = BeautifulSoup(req.content, 'html.parser')
     #dl_url = soup.find_all("https://larecontent.com/download").get("href")
     dl_url = soup.a
