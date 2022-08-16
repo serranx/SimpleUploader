@@ -49,9 +49,8 @@ async def dl_streamlare(bot, message):
             text=str(e)
         )
         return
-    file_title = response_sl["title"]
-    dl_url = response_sl["url"]
-    ext = response_sl["ext"]
+    dl_url, file_title = response_sl.split("|")
+    ext = "mp4"
     if custom_filename is not None:
         if custom_filename.endswith("." + ext):
             filename = custom_filename
@@ -59,7 +58,7 @@ async def dl_streamlare(bot, message):
             filename = custom_filename + "." + ext
     else:
         filename = file_title
-    message.data = "{}|{}".format(url, filename)
+    message.data = "{}|{}".format(dl_url, filename)
     #await streamlare.download(bot, message, msg_info)
 
 @Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
