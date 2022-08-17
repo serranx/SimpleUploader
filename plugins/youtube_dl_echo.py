@@ -12,7 +12,7 @@ from pyrogram import Client as Clinton
 from helper_funcs.display_progress import humanbytes
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-@Clinton.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com|drive\.google\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz"))
+@Clinton.on_message(filters.private & filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
     await AddUser(bot, update)
     msg_info = await update.reply_text(
