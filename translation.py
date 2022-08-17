@@ -27,8 +27,7 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     INCORRECT_REQUEST = """<b>❗Make sure you submit your request correctly❗</b>
     
 /help for more details!"""
-    DISPLAY_PROGRESS = """<b>Downloading to my server... 📥</b>
-[{0}{1}] {2}%
+    DISPLAY_PROGRESS = """[{0}{1}] {2}%
 <i>📁 {3}</i>
 
 <b>🔹Finished ✅:</b> <i>{4} of {5}</i>
@@ -44,10 +43,10 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
 URL | filename | username | password"""
     DOWNLOAD_START = """<b>File detected:</b> {}
     
-<b>Downloading to my server...</b> 📥
+<b>Downloading to my server... 📥</b>
 
 Please wait uploading will start as soon as possible 😎"""
-    UPLOAD_START = "<b>Uploading to Telegram...</b> 📤"
+    UPLOAD_START = "<b>Uploading to Telegram... 📤</b>"
     RCHD_TG_API_LIMIT = """<b>❗The file couldn't be uploaded❗</b>
 Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
 
