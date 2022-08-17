@@ -197,11 +197,10 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                     percentage = downloaded * 100 / total_length
                     speed = downloaded / diff
                     elapsed_time = round(diff) * 1000
-                    time_to_completion = round(
-                        (total_length - downloaded) / speed) * 1000
+                    time_to_completion = round((total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
                     try:
-                        current_message = Translation.BUTTON_DL_PROGRESS.format(
+                        current_message = "<b>Downloading to my server...</b> 📥\n" + Translation.BUTTON_DL_PROGRESS.format(
                             "".join(["●" for i in range(math.floor(percentage / 5))]),
                             "".join(["○" for i in range(20 - math.floor(percentage / 5))]),
                             round(percentage, 2),
@@ -209,13 +208,13 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                             humanbytes(downloaded),
                             humanbytes(total_length),
                             humanbytes(speed),
-                            "💯" if TimeFormatter(time_to_completion) == "" else TimeFormatter(time_to_completion)
+                            TimeFormatter(time_to_completion) if time_to_completion != "" else "0 s"
                         )
                         if current_message != display_message:
                             await bot.edit_message_text(
                                 chat_id,
                                 message_id,
-                                text=current_message
+                                text=current_message + "\n\n<i><b>Note:</b> fembed links are very low, so be patient.</i>"
                             )
                             display_message = current_message
                     except Exception as e:
