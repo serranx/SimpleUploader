@@ -12,21 +12,42 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 @Clinton.on_message(filters.private & filters.command(["files"]))
-async def test(bot, update):
-    path = Config.DOWNLOAD_LOCATION + str(update.chat.id) + "/"
-    try:
-        files = os.listdir(path)
-        joined_files = "\n".join(files)
-        await update.reply_text(
-            str(joined_files),
-            quote=True
-        )
-    except:
-        await update.reply_text(
-            "No files found.",
-            quote=True
-        )
+async def test(bot, message):
+    if message.from_user.id != Config.OWNER_ID:
         return
+    if len(message.text.split(" ")) == 2:
+        user_id = message.text.split(" ")[1]
+        if user_id == "me":
+            user_id == Config.OWNER_ID
+        path = Config.DOWNLOAD_LOCATION + str(user_id) + "/"
+        try:
+            files = os.listdir(path)
+            joined_files = "\n".join(files)
+            await message.reply_text(
+                str(joined_files),
+                quote=True
+            )
+        except:
+            await message.reply_text(
+                "No files found.",
+                quote=True
+            )
+            return
+    else:
+        path = Config.DOWNLOAD_LOCATION
+        try:
+            files = os.listdir(path)
+            joined_files = "\n".join(files)
+            await message.reply_text(
+                str(joined_files),
+                quote=True
+            )
+        except:
+            await message.reply_text(
+                "No files found.",
+                quote=True
+            )
+            return
 
 @Clinton.on_message(filters.private & filters.reply & filters.text)
 async def edit_caption(bot, update):
