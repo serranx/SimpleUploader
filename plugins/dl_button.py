@@ -102,8 +102,8 @@ async def ddl_call_back(bot, update):
                 text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
                 message_id=update.message.message_id
             )
+            os.remove(download_directory)
         else:
-            # ref: message from @SOURCES_CODES
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
