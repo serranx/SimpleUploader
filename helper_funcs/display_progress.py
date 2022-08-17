@@ -39,7 +39,7 @@ async def progress_for_pyrogram(
                 TimeFormatter(time_to_completion) if time_to_completion != '' else "0 s"
             )
             if current_message != display_message:
-                await message.edit(
+                await message.edit_text(
                     text=current_message
                 )
                 display_message = current_message
