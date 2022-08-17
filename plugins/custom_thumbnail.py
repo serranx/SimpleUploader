@@ -36,7 +36,7 @@ async def delthumbnail(bot, message):
         )
     else:
         await message.reply_text(
-            "Nothing to delete 🤨"
+            "Nothing to delete 🤨",
             quote=True
         )
 
@@ -52,7 +52,7 @@ async def viewthumbnail(bot, message):
         )
     else:
         await message.reply_text(
-            "No thumbnail found 🥴"
+            "No thumbnail found 🥴",
             quote=True
         )
 
