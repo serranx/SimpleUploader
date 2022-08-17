@@ -45,17 +45,17 @@ Please wait uploading will start as soon as possible 😎"""
 Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
 
 <b>🔸File detected:</b> <i>{}</i>
-<b>🔸Downloaded in:</b> <i>{} seconds</i>
+<b>🔸Downloaded:</b> <i>in {} seconds</i>
 <b>🔸Detected file size:</b> <i>{}</i>"""
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
-    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<b>✅ Downloaded in:</b> <i>{} seconds</i>
-<b>✅ Uploaded in:</b> <i>{} seconds</i>"""
+    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<b>✅ Downloaded:</b> <i>in {} seconds</i>
+<b>✅ Uploaded:</b> <i>in {} seconds</i>"""
     SAVED_CUSTOM_THUMB_NAIL = "✅ Custom video/file thumbnail saved. This image will be used in the video/file."
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
     NO_FILE_FOUND = """<b>❗I couldn't find any video/file❗</b>
 Go check if you can access the content in the URL from your browser first!"""
-    NO_VOID_FORMAT_FOUND = """<b>❗ SOMETHING WENT WRONG ❗</b>
+    NO_VOID_FORMAT_FOUND = """<b>❗SOMETHING WENT WRONG❗</b>
 I think you have entered an unaccessible URL or a private URL (which only works with your IP).
 
 <b>🚨Additional info:</b>
