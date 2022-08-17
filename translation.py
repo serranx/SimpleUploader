@@ -27,6 +27,13 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     INCORRECT_REQUEST = """<b>❗Make sure you submit your request correctly❗</b>
     
 /help for more details!"""
+    BUTTON_DL_PROGRESS = """<b>Downloading to my server... 📥</b>
+[{0}{1}] {2}%
+<i>📁 {3}</i>
+
+<b>🔹Finished ✅:</b> <i>{4} of {5}</i>
+<b>🔹Speed 🚀:</b> <i>{6}/s</i>
+<b>🔹Time left 🕒:</b> <i>{7}</i>"""
     FORMAT_SELECTION = """<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>
     
 👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇
@@ -48,8 +55,8 @@ Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
 <b>🔸Downloaded:</b> <i>in {} seconds</i>
 <b>🔸Detected file size:</b> <i>{}</i>"""
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
-    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<b>✅ Downloaded:</b> <i>in {} seconds</i>
-<b>✅ Uploaded:</b> <i>in {} seconds</i>"""
+    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<i>✅ Downloaded in <b>{} seconds<b></i>
+<i>✅ Uploaded in <b>{} seconds</b></i>"""
     SAVED_CUSTOM_THUMB_NAIL = "✅ Custom video/file thumbnail saved. This image will be used in the video/file."
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
