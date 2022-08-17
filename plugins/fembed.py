@@ -176,7 +176,53 @@ async def download(bot, update):
             message_id=msg_info.message_id,
             disable_web_page_preview=True
         )
-
+async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
+    downloaded = 0
+    display_message = ""
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        total_length = int(response.headers["Content-Length"])
+        content_type = response.headers["Content-Type"]
+        if "text" in content_type and total_length < 500:
+            return await response.release()
+        with open(file_name, "wb") as f_handle:
+            while True:
+                chunk = await response.content.read(Config.CHUNK_SIZE)
+                if not chunk:
+                    break
+                f_handle.write(chunk)
+                downloaded += Config.CHUNK_SIZE
+                now = time.time()
+                diff = now - start
+                if round(diff % 5.00) == 0 or downloaded == total_length:
+                    percentage = downloaded * 100 / total_length
+                    speed = downloaded / diff
+                    elapsed_time = round(diff) * 1000
+                    time_to_completion = round(
+                        (total_length - downloaded) / speed) * 1000
+                    estimated_total_time = elapsed_time + time_to_completion
+                    try:
+                        current_message = Translation.BUTTON_DL_PROGRESS.format(
+                            "".join(["●" for i in range(math.floor(percentage / 5))]),
+                            "".join(["○" for i in range(20 - math.floor(percentage / 5))]),
+                            round(percentage, 2),
+                            file_name.split("/")[-1],
+                            humanbytes(downloaded),
+                            humanbytes(total_length),
+                            humanbytes(speed),
+                            "💯" if TimeFormatter(time_to_completion) == "" else TimeFormatter(time_to_completion)
+                        )
+                        if current_message != display_message:
+                            await bot.edit_message_text(
+                                chat_id,
+                                message_id,
+                                text=current_message
+                            )
+                            display_message = current_message
+                    except Exception as e:
+                        logger.info(str(e))
+                        pass
+        return await response.release()
+"""
 async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
     downloaded = 0
     display_message = ""
@@ -208,11 +254,11 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
             round(percentage, 2),
             file_name.split("/")[-1]
         )
-                        current_message = progress + """🔹<b>Finished ✅:</b> {0} of {1}
+                        current_message = progress + ""🔹<b>Finished ✅:</b> {0} of {1}
 🔹<b>Speed 🚀:</b> {2}/s
 🔹<b>Time left 🕒:</b> {3}
 
-<i><b>Note: </b>fembed links are very slow, so be patient.</i>""".format(
+<i><b>Note: </b>fembed links are very slow, so be patient.</i>"".format(
             humanbytes(downloaded),
             humanbytes(total_length),
             humanbytes(speed),
@@ -230,3 +276,4 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                         logger.info(str(e))
                         pass
         return await response.release()
+"""
