@@ -27,7 +27,7 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     INCORRECT_REQUEST = """<b>❗Make sure you submit your request correctly❗</b>
     
 /help for more details!"""
-    BUTTON_DL_PROGRESS = """<b>Downloading to my server... 📥</b>
+    DISPLAY_PROGRESS = """<b>Downloading to my server... 📥</b>
 [{0}{1}] {2}%
 <i>📁 {3}</i>
 
