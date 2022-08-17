@@ -21,7 +21,7 @@ async def get(url):
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
         }
     req = requests.get(url, headers)
-    time.sleep(2)
+    time.sleep(10)
     print(req.content)
     soup = BeautifulSoup(req.content, 'html.parser')
     #dl_url = soup.find_all("https://larecontent.com/download").get("href")
