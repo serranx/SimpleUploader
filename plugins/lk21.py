@@ -10,12 +10,12 @@ from pyrogram import filters
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from . import streamlare
+#from . import streamlare
 from . import googledrive
 from . import fembed
 from . import mediafire
 import lk21
-
+"""
 @Clinton.on_message(filters.regex(pattern="slwatch.co"))
 async def dl_streamlare(bot, message):
     custom_filename = None
@@ -61,7 +61,7 @@ async def dl_streamlare(bot, message):
         filename = file_title
     message.data = "{}|{}".format(dl_url, filename)
     #await streamlare.download(bot, message, msg_info)
-
+"""
 @Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
 async def dl_googledrive(bot, update):
     custom_filename = None
