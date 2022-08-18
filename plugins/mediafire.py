@@ -21,17 +21,17 @@ async def get(url):
         'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
         }
     req = requests.get(url, headers)
-    soup = BeautifulSoup(req.content, 'html.parser')
-    dl_url = soup.find("a", class_="popsok").get('href')
+    soup = BeautifulSoup(req.content, "html.parser")
+    dl_url = soup.find("a", class_="popsok").get("href")
     filename = soup.find("div", class_="filename").get_text()
-    return "{}|{}".format(dl_url, filename)
+    return dl_url, filename
     
-async def download(bot, update, dl_info):
-    cb_data = update.data
+async def download(bot, message, info_msg):
+    cb_data = message.data
     send_type, dl_url, filename = cb_data.split("|")
     description = filename.split("." + filename.split(".")[-1])[0]
     start = datetime.now()
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + filename
@@ -44,24 +44,22 @@ async def download(bot, update, dl_info):
                 session,
                 dl_url,
                 download_directory,
-                update.chat.id,
-                dl_info.message_id,
+                message.chat.id,
+                info_msg.message_id,
                 c_time
             )
         except asyncio.TimeoutError:
             await bot.edit_message_text(
                 text=Translation.SLOW_URL_DECED,
-                chat_id=update.chat.id,
-                message_id=dl_info.message_id
+                chat_id=message.chat.id,
+                message_id=info_msg.message_id
             )
             return
     if os.path.exists(download_directory):
         end_one = datetime.now()
         time_taken_for_download = (end_one - start).seconds
-        await bot.edit_message_text(
-            text=Translation.UPLOAD_START,
-            chat_id=update.chat.id,
-            message_id=dl_info.message_id
+        await info_msg.edit_text(
+            Translation.UPLOAD_START
         )
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
@@ -70,10 +68,8 @@ async def download(bot, update, dl_info):
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
-            await bot.edit_message_text(
-                chat_id=update.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
-                message_id=dl_info.message_id
+            await info_msg.edit_text(
+                Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size))
             )
             os.remove(download_directory)
             return
@@ -82,43 +78,43 @@ async def download(bot, update, dl_info):
             # try to upload file
             if send_type == "audio":
                 duration = await Mdata03(download_directory)
-                thumb_image_path = await Gthumb01(bot, update)
+                thumb_image_path = await Gthumb01(bot, message)
                 await bot.send_audio(
-                    chat_id=update.chat.id,
+                    chat_id=message.chat.id,
                     audio=download_directory,
                     caption=description,
                     duration=duration,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message_id,
+                    reply_to_message_id=message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        dl_info,
+                        info_msg,
                         filename,
                         start_time
                     )
                 )
             elif send_type == "file":
-                  thumb_image_path = await Gthumb01(bot, update)
+                  thumb_image_path = await Gthumb01(bot, message)
                   await bot.send_document(
-                    chat_id=update.chat.id,
+                    chat_id=message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    reply_to_message_id=update.message_id,
+                    reply_to_message_id=message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        dl_info,
+                        info_msg,
                         filename,
                         start_time
                     )
                 )
             elif send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
-                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                thumb_image_path = await Gthumb02(bot, message, duration, download_directory)
                 await bot.send_video(
-                    chat_id=update.chat.id,
+                    chat_id=message.chat.id,
                     video=download_directory,
                     caption=description,
                     duration=duration,
@@ -126,11 +122,11 @@ async def download(bot, update, dl_info):
                     height=height,
                     supports_streaming=True,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message_id,
+                    reply_to_message_id=message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        dl_info,
+                        info_msg,
                         filename,
                         start_time
                     )
@@ -144,8 +140,8 @@ async def download(bot, update, dl_info):
             time_taken_for_upload = (end_two - end_one).seconds
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=update.chat.id,
-                message_id=dl_info.message_id,
+                chat_id=message.chat.id,
+                message_id=info_msg.message_id,
                 disable_web_page_preview=True
             )
             logger.info("✅ " + filename)
@@ -154,8 +150,8 @@ async def download(bot, update, dl_info):
     else:
         await bot.edit_message_text(
             text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
-            chat_id=update.chat.id,
-            message_id=dl_info.message_id,
+            chat_id=message.chat.id,
+            message_id=info_msg.message_id,
             disable_web_page_preview=True
         )
 
