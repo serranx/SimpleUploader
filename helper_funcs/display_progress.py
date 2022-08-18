@@ -7,7 +7,6 @@ from config import Config
 from translation import Translation
 
 async def progress_for_pyrogram(current, total, ud_type, message, filename, start):
-    display_message = ""
     now = time.time()
     diff = now - start
     if round(diff % 10.00) == 0 or current == total:
@@ -36,7 +35,6 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
                     current_message
                 )
             )
-            display_message = current_message
         except Exception as e:
             logger.info(str(e))
             pass
