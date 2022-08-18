@@ -19,7 +19,7 @@ import lk21
 @Clinton.on_message(filters.regex(pattern="slwatch.co"))
 async def dl_streamlare(bot, message):
     custom_filename = None
-    msg_info = await message.reply_text(
+    info_msg = await message.reply_text(
         "<b>Processing...⏳</b>", 
         quote=True
     )
@@ -30,7 +30,7 @@ async def dl_streamlare(bot, message):
             await bot.edit_message_text(
                 text=Translation.INCORRECT_REQUEST,
                 chat_id=message.chat.id,
-                message_id=msg_info.message_id
+                message_id=info_msg.message_id
             )
             return
     else:
@@ -39,14 +39,14 @@ async def dl_streamlare(bot, message):
         response_sl = await streamlare.get(url)
         await bot.edit_message_text(
             chat_id=message.chat.id,
-            message_id=msg_info.message_id,
+            message_id=info_msg.message_id,
             text=str(response_sl)
         )
         return
     except Exception as e:
         await bot.edit_message_text(
             chat_id=message.chat.id,
-            message_id=msg_info.message_id,
+            message_id=info_msg.message_id,
             text=str(e)
         )
         return
@@ -60,40 +60,34 @@ async def dl_streamlare(bot, message):
     else:
         filename = file_title
     message.data = "{}|{}".format(dl_url, filename)
-    #await streamlare.download(bot, message, msg_info)
+    #await streamlare.download(bot, message, info_msg)
 """
-@Clinton.on_message(filters.regex(pattern="drive\.google\.com"))
-async def dl_googledrive(bot, update):
+@Clinton.on_message(filters.regex(pattern="drive.google.com"))
+async def dl_googledrive(bot, message):
     custom_filename = None
-    msg_info = await update.reply_text(
+    info_msg = await message.reply_text(
         "<b>Processing...⏳</b>", 
         quote=True
     )
-    if " * " in update.text:
+    if " * " in message.text:
         try:
-            url, custom_filename = update.text.split(" * ")
+            url, custom_filename = message.text.split(" * ")
         except:
-            await bot.edit_message_text(
-                text=Translation.INCORRECT_REQUEST,
-                chat_id=update.chat.id,
-                message_id=msg_info.message_id
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
             )
             return
     else:
-        url = update.text
+        url = message.text
     if "folders" in url:
-        await bot.edit_message_text(
-            text="<b>Sorry, but I can't upload folders 😕</b>",
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id
+        await info_msg.edit_text(
+            "<b>Sorry, but I can't upload folders 😕</b>"
         )
         return
     try:
         response_gd = await googledrive.get(url)
     except:
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id,
+        await info_msg.edit_text(
             text=Translation.NO_FILE_FOUND
         )
         return
@@ -112,21 +106,21 @@ async def dl_googledrive(bot, update):
         send_type = "audio"
     else:
         send_type = "file"
-    update.data = "{}|{}|{}".format(send_type, url, filename)
-    await googledrive.download(bot, update, msg_info)
+    message.data = "{}|{}|{}".format(send_type, url, filename)
+    await googledrive.download(bot, message, info_msg)
 
-@Clinton.on_message(filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|embedsito\.com|owodeuwu\.xyz|plusto\.link"))
-async def dl_fembed(bot, update):
-    processing = await update.reply_text(
+@Clinton.on_message(filters.regex(pattern="fembed.com|fembed-hd.com|femax20.com|vanfem.com|suzihaza.com|embedsito.com|owodeuwu.xyz|plusto.link"))
+async def dl_fembed(bot, message):
+    info_msg = await message.reply_text(
         "<b>Processing... ⏳</b>", 
         quote=True
     )
     bypasser = lk21.Bypass()
-    if " * " in update.text:
-        url = update.text.split(" * ")[0]
+    if " * " in message.text:
+        url = message.text.split(" * ")[0]
         url = "https://fembed.com/f/" + url.split("/")[-1]
     else:
-        url = update.text
+        url = message.text
         url = "https://fembed.com/f/" + url.split("/")[-1]
     response_fembed = bypasser.bypass_url(url)
     formats = []
@@ -146,15 +140,13 @@ async def dl_fembed(bot, update):
             })
             item_id += 1
     except:
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=processing.message_id,
+        await info_msg.edit_text(
             text=Translation.NO_FILE_FOUND
         )
         return
     inline_keyboard = []
     json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     save_ytdl_json_path = tmp_directory_for_each_user + "/" + json_name + ".json"
@@ -174,15 +166,14 @@ async def dl_fembed(bot, update):
             )
         ])
     try:
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=processing.message_id,
+        await info_msg.edit_text(
             text=Translation.FORMAT_SELECTION,
             reply_markup=InlineKeyboardMarkup(inline_keyboard),
             parse_mode="html"
         )
     except Exception as e:
-        await update.reply_text(
+        await info_msg.delete(True)
+        await message.reply_text(
             text=str(e),
             quote=True
         )
