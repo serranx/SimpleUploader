@@ -29,8 +29,8 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
             TimeFormatter(time_to_completion) if time_to_completion != "" else "0 s"
         )
         try:
-            await message.edit(
-                text="{}\n{}".format(
+            await message.edit_text(
+                "{}\n{}".format(
                     ud_type,
                     current_message
                 )
