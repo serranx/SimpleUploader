@@ -188,40 +188,35 @@ async def dl_fembed(bot, update):
         )
         return
     
-@Clinton.on_message(filters.regex(pattern="mediafire\.com/"))
-async def dl_mediafire(bot, update):
+@Clinton.on_message(filters.regex(pattern="mediafire.com/"))
+async def dl_mediafire(bot, message):
     custom_filename = None
-    msg_info = await update.reply_text(
+    info_msg = await message.reply_text(
         "<b>Processing... ⏳</b>",
         quote=True
     )
-    if " * " in update.text:
+    if " * " in message.text:
         try:
-            url, custom_filename = update.text.split(" * ")
+            url, custom_filename = message.text.split(" * ")
         except:
-            await bot.edit_message_text(
-                text=Translation.INCORRECT_REQUEST,
-                chat_id=update.chat.id,
-                message_id=msg_info.message_id
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
             )
             return
     else:
-        url = update.text
+        url = message.text
     if re.search("download[0-9]*\.mediafire\.com", url):
         url_parts = url.split("/")
         url = "https://www.mediafire.com/file/" + url_parts[-2] + "/" + url_parts[-1] + "/file"
     if "?dkey=" in url:
         url = url.split("?dkey=")[0]
     try:
-        response_mf = await mediafire.get(url)
+        dl_url, filename = await mediafire.get(url)
     except:
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id,
-            text=Translation.NO_FILE_FOUND
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND
         )
         return
-    dl_url, filename = response_mf.split("|")
     ext = filename.split(".")[-1]
     if custom_filename is not None:
         if "\n" in custom_filename:
@@ -236,5 +231,5 @@ async def dl_mediafire(bot, update):
         send_type = "audio"
     else:
         send_type = "file"
-    update.data = "{}|{}|{}".format(send_type, dl_url, filename)
-    await mediafire.download(bot, update, msg_info)
+    message.data = "{}|{}|{}".format(send_type, dl_url, filename)
+    await mediafire.download(bot, message, info_msg)
