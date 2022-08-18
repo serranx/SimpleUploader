@@ -229,6 +229,7 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                                 text=current_message
                             )
                             display_message = current_message
+                            time.sleep(1)
                     except Exception as e:
                         logger.info(str(e))
                         pass
