@@ -36,6 +36,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
                     current_message
                 )
             )
+            display_message = current_message
         except Exception as e:
             logger.info(str(e))
             pass
