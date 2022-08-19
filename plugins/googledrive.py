@@ -48,16 +48,14 @@ async def get(url):
     response_json["title"] = title
     return response_json
         
-async def download(bot, update, msg_info):
-    cb_data = update.data
+async def download(bot, message, info_msg):
+    cb_data = message.data
     tg_send_type, youtube_dl_url, filename = cb_data.split("|")
     description = filename.split("." + filename.split(".")[-1])[0]
-    await bot.edit_message_text(
-    	  chat_id=update.chat.id,
-    	  message_id=msg_info.message_id,
-        text=Translation.DOWNLOAD_START.format(filename)
+    await info_msg.edit_text(
+        Translation.DOWNLOAD_START.format(filename)
     )
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.chat.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + filename
@@ -82,7 +80,7 @@ async def download(bot, update, msg_info):
             stderr=asyncio.subprocess.PIPE,
         )
     except Exception as e:
-        await update.reply_text(
+        await message.reply_text(
             str(e)
         )
         return
@@ -93,10 +91,8 @@ async def download(bot, update, msg_info):
     ad_string_to_replace = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
     if e_response and ad_string_to_replace in e_response:
         error_message = e_response.replace(ad_string_to_replace, "")
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id,
-            text=error_message
+        await info_msg.edit_text(
+            error_message
         )
         return
     if t_response:
@@ -109,75 +105,65 @@ async def download(bot, update, msg_info):
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
-            await bot.edit_message_text(
-                chat_id=update.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size)),
-                message_id=msg_info.message_id
+            await info_msg.edit_text(
+                Translation.RCHD_TG_API_LIMIT.format(filename, time_taken_for_download, humanbytes(file_size))
             )
             os.remove(download_directory)
             return
         else:
-            await bot.edit_message_text(
-                text=Translation.UPLOAD_START,
-                chat_id=update.chat.id,
-                message_id=msg_info.message_id
+            await info_msg.edit_text(
+                Translation.UPLOAD_START
             )
             start_time = time.time()
             # try to upload file
             if tg_send_type == "audio":
                 duration = await Mdata03(download_directory)
-                thumbnail = await Gthumb01(bot, update)
-                await bot.send_audio(
-                    chat_id=update.chat.id,
+                thumbnail = await Gthumb01(bot, message)
+                await message.reply_audio(
                     audio=download_directory,
                     caption=description,
-                    parse_mode="HTML",
                     duration=duration,
                     thumb=thumbnail,
-                    reply_to_message_id=update.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        msg_info,
+                        info_msg,
                         filename,
                         start_time
                     )
                 )
             elif tg_send_type == "file":
-                thumbnail = await Gthumb01(bot, update)
-                await bot.send_document(
-                    chat_id=update.chat.id,
+                thumbnail = await Gthumb01(bot, message)
+                await message.reply_document(
                     document=download_directory,
                     thumb=thumbnail,
                     caption=description,
-                    parse_mode="HTML",
-                    reply_to_message_id=update.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        msg_info,
+                        info_msg,
                         filename,
                         start_time
                     )
                 )
             elif tg_send_type == "video":
-                 width, height, duration = await Mdata01(download_directory)
-                 thumbnail = await Gthumb02(bot, update, duration, download_directory)
-                 await bot.send_video(
-                    chat_id=update.chat.id,
+                width, height, duration = await Mdata01(download_directory)
+                thumbnail = await Gthumb02(bot, message, duration, download_directory)
+                await bot.reply_video(
                     video=download_directory,
                     caption=description,
-                    parse_mode="HTML",
                     duration=duration,
                     width=width,
                     height=height,
                     thumb=thumbnail,
                     supports_streaming=True,
-                    reply_to_message_id=update.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        msg_info,
+                        info_msg,
                         filename,
                         start_time
                     )
@@ -191,11 +177,8 @@ async def download(bot, update, msg_info):
                 os.remove(thumbnail)
             except:
                 pass
-            await bot.edit_message_text(
-                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=update.chat.id,
-                message_id=msg_info.message_id,
-                disable_web_page_preview=True
+            await info_msg.edit_text(
+                Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload)
             )
             logger.info("✅ " + filename)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
