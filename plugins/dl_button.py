@@ -91,7 +91,7 @@ async def ddl_call_back(bot, message):
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
-            await bot.edit_text(
+            await info_msg.edit_text(
                 Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size))
             )
             os.remove(download_directory)
@@ -160,8 +160,7 @@ async def ddl_call_back(bot, message):
                 pass
             time_taken_for_upload = (end_two - end_one).seconds
             await info_msg.edit_text(
-                Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                disable_web_page_preview=True
+                Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload)
             )
             logger.info("✅ " + custom_file_name)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
@@ -205,7 +204,7 @@ async def download_coroutine(info_msg, session, url, file_name, start):
                             humanbytes(downloaded),
                             humanbytes(total_length),
                             humanbytes(speed),
-                            TimeFormatter(time_to_completion) if time_to_completion != "" else "0 s"
+                            TimeFormatter(time_to_completion) if time_to_completion != "" else "0s"
                         )
                         if current_message != display_message:
                             await info_msg.edit_text(
