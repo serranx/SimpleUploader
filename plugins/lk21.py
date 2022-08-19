@@ -10,59 +10,11 @@ from pyrogram import filters
 from pyrogram import Client as Clinton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-from . import zplayer
 from . import googledrive
 from . import fembed
 from . import mediafire
 import lk21
 
-@Clinton.on_message(filters.regex(pattern="v2.zplayer.live"))
-async def dl_streamlare(bot, message):
-    custom_filename = None
-    info_msg = await message.reply_text(
-        "<b>Processing...⏳</b>", 
-        quote=True
-    )
-    if " * " in message.text:
-        try:
-            url, custom_filename = message.text.split(" * ")
-        except:
-            await bot.edit_message_text(
-                text=Translation.INCORRECT_REQUEST,
-                chat_id=message.chat.id,
-                message_id=info_msg.message_id
-            )
-            return
-    else:
-        url = message.text
-    try:
-        response_sl = await zplayer.get(url)
-        await bot.edit_message_text(
-            chat_id=message.chat.id,
-            message_id=info_msg.message_id,
-            text=str(response_sl)
-        )
-        return
-    except Exception as e:
-        await bot.edit_message_text(
-            chat_id=message.chat.id,
-            message_id=info_msg.message_id,
-            text=str(e)
-        )
-        return
-    dl_url, file_title = response_sl.split("|")
-    ext = "mp4"
-    if custom_filename is not None:
-        if custom_filename.endswith("." + ext):
-            filename = custom_filename
-        else:
-            filename = custom_filename + "." + ext
-    else:
-        filename = file_title
-    message.data = "{}|{}".format(dl_url, filename)
-    await message.reply_text(dl_url, quote=True)
-    #await zplayer.download(bot, message, info_msg)
-    
 @Clinton.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
     custom_filename = None
