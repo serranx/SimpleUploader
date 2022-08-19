@@ -101,7 +101,7 @@ async def ddl_call_back(bot, message):
             if tg_send_type == "audio":
                 duration = await Mdata03(download_directory)
                 thumb_image_path = await Gthumb01(bot, message)
-                await message.message.reply_audio(
+                await message.message.reply_to_message.reply_audio(
                     audio=download_directory,
                     caption=description,
                     duration=duration,
@@ -117,7 +117,7 @@ async def ddl_call_back(bot, message):
                 )
             elif tg_send_type == "file":
                 thumb_image_path = await Gthumb01(bot, message)
-                await message.message.reply_document(
+                await message.message.reply_to_message.reply_document(
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
@@ -133,7 +133,7 @@ async def ddl_call_back(bot, message):
             elif tg_send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
                 thumb_image_path = await Gthumb02(bot, message, duration, download_directory)
-                await message.message.reply_video(
+                await message.message.reply_to_message.reply_video(
                     video=download_directory,
                     caption=description,
                     duration=duration,
