@@ -13,19 +13,15 @@ from plugins.custom_thumbnail import *
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 
 async def get(url):
-    headers = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '3600',
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'
-        }
-    req = requests.get(url, headers)
-    time.sleep(10)
-    print(req.content)
-    soup = BeautifulSoup(req.content, 'html.parser')
-    #dl_url = soup.find_all("https://larecontent.com/download").get("href")
-    dl_url = soup.a
-    print(dl_url)
-    filename = "idjfbxno"
-    return "{}|{}".format(dl_url, filename)
+    req = requests.get(url)
+    soup = BeautifulSoup(req.content, "html.parser")
+    try:
+	    dl_url = soup.find("a", class_="uk-button uk-button-danger").get("href")
+    except:
+    	try:
+		    error_msg = soup.find("p", class_="uk-text-danger uk-text-center").get_text()
+		    print(error_msg)
+	    except Exception as e:
+	    	print("Unknown error.\n"+str(e))
+    filename = "test.mp4"
+    print dl_url, filename
