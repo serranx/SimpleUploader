@@ -36,7 +36,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
                 )
             )
         except Exception as e:
-            logger.info(str(e))
+            #logger.info(str(e))
             pass
 
 def humanbytes(size):
