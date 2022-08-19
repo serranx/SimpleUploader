@@ -36,7 +36,7 @@ async def dl_streamlare(bot, message):
     else:
         url = message.text
     try:
-        response_sl = await streamlare.get(url)
+        response_sl = await zplayer.get(url)
         await bot.edit_message_text(
             chat_id=message.chat.id,
             message_id=info_msg.message_id,
@@ -61,7 +61,7 @@ async def dl_streamlare(bot, message):
         filename = file_title
     message.data = "{}|{}".format(dl_url, filename)
     await message.reply_text(dl_url, quote=True)
-    #await streamlare.download(bot, message, info_msg)
+    #await zplayer.download(bot, message, info_msg)
     
 @Clinton.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
