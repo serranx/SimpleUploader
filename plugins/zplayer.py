@@ -21,8 +21,8 @@ async def get(url):
         try:
             error_msg = soup.find("p", class_="uk-text-danger uk-text-center").get_text()
             print(error_msg)
-	    except Exception as e:
-	        print(req.content)
-	    	print("Unknown error.\n"+str(e))
+        except Exception as e:
+            print(req.content)
+            print("Unknown error.\n"+str(e))
     filename = "test.mp4"
     print dl_url, filename
