@@ -10,28 +10,27 @@ from plugins.custom_thumbnail import *
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 
-async def download(bot, update):
-    cb_data = update.data
+async def download(bot, message):
+    cb_data = message.data
     _, tg_send_type, source, json_name = cb_data.split("|")
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(update.message.chat.id) + \
+    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(message.message.chat.id) + \
         "/" + json_name + ".json"
-    thumb_image_path = Config.DOWNLOAD_LOCATION + str(update.message.chat.id) + \
+    thumb_image_path = Config.DOWNLOAD_LOCATION + str(message.message.chat.id) + \
         "/" + json_name + ".jpg"
     try:
         with open(save_ytdl_json_path, "r", encoding="utf8") as f:
             response_json = json.load(f)
     except Exception as e:
         await bot.send_message(
-            chat_id=update.message.chat.id,
+            chat_id=message.message.chat.id,
             text=str(e)
         )
         return
     youtube_dl_url = response_json[int(source)]["url"]
     youtube_dl_ext = response_json[int(source)]["ext"]
     custom_file_name = response_json[int(source)]["title"]
-    #custom_file_name = os.path.basename(youtube_dl_url)
-    if " * " in update.message.reply_to_message.text:
-        url_parts = update.message.reply_to_message.text.split(" * ")
+    if " * " in message.message.reply_to_message.text:
+        url_parts = message.message.reply_to_message.text.split(" * ")
         if len(url_parts) >= 2:
             custom_file_name = url_parts[1]
     if not "." + youtube_dl_ext in custom_file_name:
@@ -40,12 +39,12 @@ async def download(bot, update):
     logger.info(youtube_dl_url)
     logger.info(custom_file_name)
     start = datetime.now()
-    msg_info = await bot.edit_message_text(
-        chat_id=update.message.chat.id,
-        message_id=update.message.message_id,
+    info_msg = await bot.edit_message_text(
+        chat_id=message.message.chat.id,
+        message_id=message.message.message_id,
         text="<b>Downloading to my server... 📥</b>"
     )
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.message.chat.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.message.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + custom_file_name
@@ -58,25 +57,21 @@ async def download(bot, update):
                 session,
                 youtube_dl_url,
                 download_directory,
-                update.message.chat.id,
-                msg_info.message_id,
+                message.message.chat.id,
+                info_msg.message_id,
                 c_time
             )
         except asyncio.TimeoutError:
-            await bot.edit_message_text(
-                text=Translation.SLOW_URL_DECED,
-                chat_id=update.message.chat.id,
-                message_id=msg_info.message_id
+            await info_msg.edit_text(
+                Translation.SLOW_URL_DECED
             )
             return
     if os.path.exists(download_directory):
         if os.path.exists(save_ytdl_json_path):
             os.remove(save_ytdl_json_path)
         end_one = datetime.now()
-        await bot.edit_message_text(
-            text=Translation.UPLOAD_START,
-            chat_id=update.message.chat.id,
-            message_id=msg_info.message_id
+        await info_msg.edit_text(
+            Translation.UPLOAD_START
         )
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
@@ -85,10 +80,8 @@ async def download(bot, update):
             download_directory = os.path.splitext(download_directory)[0] + "." + "mkv"
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
-            await bot.edit_message_text(
-                chat_id=update.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
-                message_id=msg_info.message_id
+            await info_msg.edit_text(
+                Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size))
             )
             os.remove(download_directory)
             return
@@ -97,43 +90,43 @@ async def download(bot, update):
             # try to upload file
             if tg_send_type == "audio":
                 duration = await Mdata03(download_directory)
-                thumb_image_path = await Gthumb01(bot, update)
+                thumb_image_path = await Gthumb01(bot, message)
                 await bot.send_audio(
-                    chat_id=update.message.chat.id,
+                    chat_id=message.message.chat.id,
                     audio=download_directory,
                     caption=description,
                     duration=duration,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    reply_to_message_id=message.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        msg_info,
+                        info_msg,
                         custom_file_name,
                         start_time
                     )
                 )
             elif tg_send_type == "file":
-                thumb_image_path = await Gthumb01(bot, update)
+                thumb_image_path = await Gthumb01(bot, message)
                 await bot.send_document(
-                    chat_id=update.message.chat.id,
+                    chat_id=message.message.chat.id,
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    reply_to_message_id=message.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        msg_info,
+                        info_msg,
                         custom_file_name,
                         start_time
                     )
                 )
             elif tg_send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
-                thumb_image_path = await Gthumb02(bot, update, duration, download_directory)
+                thumb_image_path = await Gthumb02(bot, message, duration, download_directory)
                 await bot.send_video(
-                    chat_id=update.message.chat.id,
+                    chat_id=message.message.chat.id,
                     video=download_directory,
                     caption=description,
                     duration=duration,
@@ -141,11 +134,11 @@ async def download(bot, update):
                     height=height,
                     supports_streaming=True,
                     thumb=thumb_image_path,
-                    reply_to_message_id=update.message.reply_to_message.message_id,
+                    reply_to_message_id=message.message.reply_to_message.message_id,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
-                        msg_info,
+                        info_msg,
                         custom_file_name,
                         start_time
                     )
@@ -162,8 +155,8 @@ async def download(bot, update):
             time_taken_for_upload = (end_two - end_one).seconds
             await bot.edit_message_text(
                 text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=update.message.chat.id,
-                message_id=msg_info.message_id,
+                chat_id=message.message.chat.id,
+                message_id=info_msg.message_id,
                 disable_web_page_preview=True
             )
             logger.info("✅ " + custom_file_name)
@@ -172,10 +165,11 @@ async def download(bot, update):
     else:
         await bot.edit_message_text(
             text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
-            chat_id=update.message.chat.id,
-            message_id=msg_info.message_id,
+            chat_id=message.message.chat.id,
+            message_id=info_msg.message_id,
             disable_web_page_preview=True
         )
+
 async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
     downloaded = 0
     display_message = ""
@@ -221,58 +215,3 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                         logger.info(str(e))
                         pass
         return await response.release()
-"""
-async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
-    downloaded = 0
-    display_message = ""
-    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
-        total_length = int(response.headers["Content-Length"])
-        content_type = response.headers["Content-Type"]
-        if "text" in content_type and total_length < 500:
-            return await response.release()
-        with open(file_name, "wb") as f_handle:
-            while True:
-                chunk = await response.content.read(Config.CHUNK_SIZE)
-                if not chunk:
-                    break
-                f_handle.write(chunk)
-                downloaded += Config.CHUNK_SIZE
-                now = time.time()
-                diff = now - start
-                if round(diff % 5.00) == 0 or downloaded == total_length:
-                    percentage = downloaded * 100 / total_length
-                    speed = downloaded / diff
-                    elapsed_time = round(diff) * 1000
-                    time_to_completion = round(
-                        (total_length - downloaded) / speed) * 1000
-                    estimated_total_time = elapsed_time + time_to_completion
-                    try:
-                        progress = "<b>Downloading to my server...</b> 📥\n[{0}{1}] {2}%\n📁 <i>{3}</i>\n\n".format(
-            ''.join(["●" for i in range(math.floor(percentage / 5))]),
-            ''.join(["○" for i in range(20 - math.floor(percentage / 5))]),
-            round(percentage, 2),
-            file_name.split("/")[-1]
-        )
-                        current_message = progress + ""🔹<b>Finished ✅:</b> {0} of {1}
-🔹<b>Speed 🚀:</b> {2}/s
-🔹<b>Time left 🕒:</b> {3}
-
-<i><b>Note: </b>fembed links are very slow, so be patient.</i>"".format(
-            humanbytes(downloaded),
-            humanbytes(total_length),
-            humanbytes(speed),
-            TimeFormatter(time_to_completion)
-        )
-
-                        if current_message != display_message:
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=current_message
-                            )
-                            display_message = current_message
-                    except Exception as e:
-                        logger.info(str(e))
-                        pass
-        return await response.release()
-"""
