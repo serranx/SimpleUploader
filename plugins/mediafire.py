@@ -49,10 +49,8 @@ async def download(bot, message, info_msg):
                 c_time
             )
         except asyncio.TimeoutError:
-            await bot.edit_message_text(
-                text=Translation.SLOW_URL_DECED,
-                chat_id=message.chat.id,
-                message_id=info_msg.message_id
+            await info_msg.edit_text(
+                Translation.SLOW_URL_DECED
             )
             return
     if os.path.exists(download_directory):
@@ -79,13 +77,12 @@ async def download(bot, message, info_msg):
             if send_type == "audio":
                 duration = await Mdata03(download_directory)
                 thumb_image_path = await Gthumb01(bot, message)
-                await bot.send_audio(
-                    chat_id=message.chat.id,
+                await message.reply_audio(
                     audio=download_directory,
                     caption=description,
                     duration=duration,
                     thumb=thumb_image_path,
-                    reply_to_message_id=message.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -95,13 +92,12 @@ async def download(bot, message, info_msg):
                     )
                 )
             elif send_type == "file":
-                  thumb_image_path = await Gthumb01(bot, message)
-                  await bot.send_document(
-                    chat_id=message.chat.id,
+                thumb_image_path = await Gthumb01(bot, message)
+                await message.reply_document(
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    reply_to_message_id=message.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -113,8 +109,7 @@ async def download(bot, message, info_msg):
             elif send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
                 thumb_image_path = await Gthumb02(bot, message, duration, download_directory)
-                await bot.send_video(
-                    chat_id=message.chat.id,
+                await message.reply_video(
                     video=download_directory,
                     caption=description,
                     duration=duration,
@@ -122,7 +117,7 @@ async def download(bot, message, info_msg):
                     height=height,
                     supports_streaming=True,
                     thumb=thumb_image_path,
-                    reply_to_message_id=message.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -138,20 +133,15 @@ async def download(bot, message, info_msg):
             except:
                 pass
             time_taken_for_upload = (end_two - end_one).seconds
-            await bot.edit_message_text(
-                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=message.chat.id,
-                message_id=info_msg.message_id,
-                disable_web_page_preview=True
+            await info_msg.edit_text(
+                Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload)
             )
             logger.info("✅ " + filename)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
             logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
     else:
-        await bot.edit_message_text(
-            text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
-            chat_id=message.chat.id,
-            message_id=info_msg.message_id,
+        await info_msg.edit_text(
+            Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
             disable_web_page_preview=True
         )
 
