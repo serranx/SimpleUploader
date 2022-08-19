@@ -40,12 +40,10 @@ async def download(bot, message, info_msg):
         c_time = time.time()
         try:
             await download_coroutine(
-                bot,
+                info_msg,
                 session,
                 dl_url,
                 download_directory,
-                message.chat.id,
-                info_msg.message_id,
                 c_time
             )
         except asyncio.TimeoutError:
@@ -145,7 +143,7 @@ async def download(bot, message, info_msg):
             disable_web_page_preview=True
         )
 
-async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
+async def download_coroutine(info_msg, session, url, file_name, start):
     downloaded = 0
     display_message = ""
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
@@ -180,13 +178,11 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                             TimeFormatter(time_to_completion) if time_to_completion != "" else "0 s"
                         )
                         if current_message != display_message:
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=current_message
+                            await info_msg.edit_text(
+                                current_message
                             )
                             display_message = current_message
-                            time.sleep(1)
+                            time.sleep(0.5)
                     except Exception as e:
                         logger.info(str(e))
                         pass
