@@ -199,6 +199,7 @@ async def download_coroutine(info_msg, session, url, file_name, start):
                                 current_message + "\n\n<i><b>Note:</b> fembed links are very low, so be patient.</i>"
                             )
                             display_message = current_message
+                            time.sleep(0.5)
                     except Exception as e:
                         logger.info(str(e))
                         pass
