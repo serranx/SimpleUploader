@@ -25,4 +25,4 @@ async def get(url):
             print(req.content)
             print("Unknown error.\n"+str(e))
     filename = "test.mp4"
-    print dl_url, filename
+    return dl_url, filename
