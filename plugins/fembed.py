@@ -53,12 +53,10 @@ async def download(bot, message):
         c_time = time.time()
         try:
             await download_coroutine(
-                bot,
+                info_msg,
                 session,
                 youtube_dl_url,
                 download_directory,
-                message.message.chat.id,
-                info_msg.message_id,
                 c_time
             )
         except asyncio.TimeoutError:
@@ -91,13 +89,12 @@ async def download(bot, message):
             if tg_send_type == "audio":
                 duration = await Mdata03(download_directory)
                 thumb_image_path = await Gthumb01(bot, message)
-                await bot.send_audio(
-                    chat_id=message.message.chat.id,
+                await message.reply_audio(
                     audio=download_directory,
                     caption=description,
                     duration=duration,
                     thumb=thumb_image_path,
-                    reply_to_message_id=message.message.reply_to_message.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -108,12 +105,11 @@ async def download(bot, message):
                 )
             elif tg_send_type == "file":
                 thumb_image_path = await Gthumb01(bot, message)
-                await bot.send_document(
-                    chat_id=message.message.chat.id,
+                await message.reply_document(
                     document=download_directory,
                     thumb=thumb_image_path,
                     caption=description,
-                    reply_to_message_id=message.message.reply_to_message.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -125,8 +121,7 @@ async def download(bot, message):
             elif tg_send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
                 thumb_image_path = await Gthumb02(bot, message, duration, download_directory)
-                await bot.send_video(
-                    chat_id=message.message.chat.id,
+                await message.reply_video(
                     video=download_directory,
                     caption=description,
                     duration=duration,
@@ -134,7 +129,7 @@ async def download(bot, message):
                     height=height,
                     supports_streaming=True,
                     thumb=thumb_image_path,
-                    reply_to_message_id=message.message.reply_to_message.message_id,
+                    quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
                         Translation.UPLOAD_START,
@@ -153,24 +148,19 @@ async def download(bot, message):
                 pass
             time_taken_for_download = (end_one - start).seconds
             time_taken_for_upload = (end_two - end_one).seconds
-            await bot.edit_message_text(
-                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=message.message.chat.id,
-                message_id=info_msg.message_id,
-                disable_web_page_preview=True
+            await info_msg.edit_text(
+                Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload)
             )
             logger.info("✅ " + custom_file_name)
             logger.info("✅ Downloaded in: " + str(time_taken_for_download))
             logger.info("✅ Uploaded in: " + str(time_taken_for_upload))
     else:
-        await bot.edit_message_text(
-            text=Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
-            chat_id=message.message.chat.id,
-            message_id=info_msg.message_id,
+        await info_msg.edit_text(
+            Translation.NO_VOID_FORMAT_FOUND.format("Incorrect Link"),
             disable_web_page_preview=True
         )
 
-async def download_coroutine(bot, session, url, file_name, chat_id, message_id, start):
+async def download_coroutine(info_msg, session, url, file_name, start):
     downloaded = 0
     display_message = ""
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
@@ -202,13 +192,11 @@ async def download_coroutine(bot, session, url, file_name, chat_id, message_id, 
                             humanbytes(downloaded),
                             humanbytes(total_length),
                             humanbytes(speed),
-                            TimeFormatter(time_to_completion) if time_to_completion != "" else "0 s"
+                            TimeFormatter(time_to_completion) if time_to_completion != "" else "0s"
                         )
                         if current_message != display_message:
-                            await bot.edit_message_text(
-                                chat_id,
-                                message_id,
-                                text=current_message + "\n\n<i><b>Note:</b> fembed links are very low, so be patient.</i>"
+                            await info_msg.edit_text(
+                                current_message + "\n\n<i><b>Note:</b> fembed links are very low, so be patient.</i>"
                             )
                             display_message = current_message
                     except Exception as e:
