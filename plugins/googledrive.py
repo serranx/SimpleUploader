@@ -151,14 +151,14 @@ async def download(bot, message, info_msg):
             elif tg_send_type == "video":
                 width, height, duration = await Mdata01(download_directory)
                 thumbnail = await Gthumb02(bot, message, duration, download_directory)
-                await bot.reply_video(
+                await message.reply_video(
                     video=download_directory,
                     caption=description,
                     duration=duration,
                     width=width,
                     height=height,
-                    thumb=thumbnail,
                     supports_streaming=True,
+                    thumb=thumbnail,
                     quote=True,
                     progress=progress_for_pyrogram,
                     progress_args=(
