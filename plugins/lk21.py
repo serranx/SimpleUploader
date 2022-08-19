@@ -16,7 +16,7 @@ from . import fembed
 from . import mediafire
 import lk21
 
-@Clinton.on_message(filters.regex(pattern="zplayer.live"))
+@Clinton.on_message(filters.regex(pattern="v2.zplayer.live"))
 async def dl_streamlare(bot, message):
     custom_filename = None
     info_msg = await message.reply_text(
