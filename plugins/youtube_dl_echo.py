@@ -225,11 +225,13 @@ async def echo(bot, message):
             try:
                 total_length = requests.get(url, stream=True).headers["Content-Length"]
             except Exception as e:
+                """
                 await info_msg.edit_text(
                     Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
                     disable_web_page_preview=True
                 )
-                return
+                """
+                pass
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
