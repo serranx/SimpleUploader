@@ -15,7 +15,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 @Clinton.on_message(filters.private & filters.regex(pattern=".*http.*"))
 async def echo(bot, update):
     await AddUser(bot, update)
-    msg_info = await update.reply_text(
+    info_msg = await update.reply_text(
     	  "<b>Processing...⏳</b>", 
     	  quote=True
     )
@@ -90,10 +90,8 @@ async def echo(bot, update):
     )
     # Wait for the subprocess to finish
     stdout, stderr = await process.communicate()
-    await bot.edit_message_text(
-        text="<b>Processing...⌛</b>",
-        chat_id=update.chat.id,
-        message_id=msg_info.message_id
+    await info_msg.edit_text(
+        "<b>Processing...⌛</b>"
     )
     time.sleep(1)
     e_response = stderr.decode().strip()
@@ -103,14 +101,10 @@ async def echo(bot, update):
         # logger.warn("Status : FAIL", exc.returncode, exc.output)
         #error_message = e_response.replace("please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output.", "")
         error_message = e_response.replace("please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U", "")
-        error_message = error_message.replace("(caused by );", "")
         if "This video is only available for registered users." in error_message:
             error_message += Translation.SET_CUSTOM_USERNAME_PASSWORD
-        #await msg_info.delete(True)
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id,
-            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
+        await info_msg.edit_text(
+            Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
             disable_web_page_preview=True
         )
         return
@@ -231,10 +225,9 @@ async def echo(bot, update):
             try:
                 total_length = requests.get(url, stream=True).headers["Content-Length"]
             except Exception as e:
-                await bot.edit_message_text(
-                    text=Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
-                    chat_id=update.chat.id,
-                    message_id=msg_info.message_id
+                await info_msg.edit_text(
+                    Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
+                    disable_web_page_preview=True
                 )
                 return
             format_id = response_json["format_id"]
@@ -289,12 +282,9 @@ async def echo(bot, update):
                     )
                 ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id,
-            text=Translation.FORMAT_SELECTION,
-            reply_markup=reply_markup,
-            parse_mode="html"
+        await info_msg.edit_text(
+            Translation.FORMAT_SELECTION,
+            reply_markup=reply_markup
         )
     else:
         # fallback for nonnumeric port a.k.a seedbox.io
@@ -302,7 +292,7 @@ async def echo(bot, update):
         cb_string_file = "{}={}={}={}".format(
             "file", "LFO", "NONE", json_name)
         cb_string_video = "{}={}={}={}".format(
-            "video", "OFL", "NONE", json_name)
+            "video", "LFO", "NONE", json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
                 "🎥 video",
@@ -314,10 +304,7 @@ async def echo(bot, update):
             )
         ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await bot.edit_message_text(
-            chat_id=update.chat.id,
-            message_id=msg_info.message_id,
-            text=Translation.FORMAT_SELECTION,
-            reply_markup=reply_markup,
-            parse_mode="html"
+        await info_msg.edit_text(
+            Translation.FORMAT_SELECTION,
+            reply_markup=reply_markup
         )
