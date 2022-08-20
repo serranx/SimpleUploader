@@ -133,9 +133,9 @@ async def echo(bot, message):
                 if format_string is None:
                     format_string = formats.get("format")
                 if "x-matroska" in format_string:
-                	  format_string = "mkv"
+                    format_string = "mkv"
                 if "unknown" in format_string:
-                	  format_string = format_ext
+                    format_string = format_ext
                 if "filesize" in formats:
                     approx_file_size = humanbytes(formats["filesize"])
                 cb_string_video = "{}|{}|{}|{}".format(
