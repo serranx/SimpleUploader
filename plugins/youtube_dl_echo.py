@@ -103,8 +103,8 @@ async def echo(bot, message):
         error_message = e_response.replace("please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U", "")
         if "This video is only available for registered users." in error_message:
             error_message += Translation.SET_CUSTOM_USERNAME_PASSWORD
-        await info_msg.edit_text(
-            Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
+        await info_msg.edit(
+            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
             disable_web_page_preview=True
         )
         return
@@ -225,13 +225,11 @@ async def echo(bot, message):
             try:
                 total_length = requests.get(url, stream=True).headers["Content-Length"]
             except Exception as e:
-                """
-                await info_msg.edit_text(
-                    Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
+                await info_msg.edit(
+                    text=Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
                     disable_web_page_preview=True
                 )
-                """
-                pass
+                return
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
@@ -268,8 +266,8 @@ async def echo(bot, message):
                     )
                 ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await info_msg.edit_text(
-            Translation.FORMAT_SELECTION,
+        await info_msg.edit(
+            text=Translation.FORMAT_SELECTION,
             reply_markup=reply_markup
         )
     else:
@@ -290,7 +288,7 @@ async def echo(bot, message):
             )
         ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await info_msg.edit_text(
-            Translation.FORMAT_SELECTION,
+        await info_msg.edit(
+            text=Translation.FORMAT_SELECTION,
             reply_markup=reply_markup
         )
