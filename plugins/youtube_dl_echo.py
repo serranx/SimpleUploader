@@ -13,16 +13,16 @@ from helper_funcs.display_progress import humanbytes
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 @Clinton.on_message(filters.private & filters.regex(pattern=".*http.*"))
-async def echo(bot, update):
-    await AddUser(bot, update)
-    info_msg = await update.reply_text(
+async def echo(bot, message):
+    await AddUser(bot, message)
+    info_msg = await message.reply_text(
     	  "<b>Processing...⏳</b>", 
     	  quote=True
     )
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
-    url = update.text
+    url = message.text
     if " * " in url:
         url_parts = url.split(" * ")
         if len(url_parts) == 2:
@@ -34,7 +34,7 @@ async def echo(bot, update):
             youtube_dl_username = url_parts[2]
             youtube_dl_password = url_parts[3]
         else:
-            for entity in update.entities:
+            for entity in message.entities:
                 if entity.type == "text_link":
                     url = entity.url
                 elif entity.type == "url":
@@ -51,7 +51,7 @@ async def echo(bot, update):
         if youtube_dl_password is not None:
             youtube_dl_password = youtube_dl_password.strip()
     else:
-        for entity in update.entities:
+        for entity in message.entities:
             if entity.type == "text_link":
                 url = entity.url
             elif entity.type == "url":
@@ -114,7 +114,7 @@ async def echo(bot, update):
             x_reponse, _ = x_reponse.split("\n")
         response_json = json.loads(x_reponse)
         json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-        tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(update.from_user.id)
+        tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
         if not os.path.isdir(tmp_directory_for_each_user):
             os.makedirs(tmp_directory_for_each_user)
         save_ytdl_json_path = tmp_directory_for_each_user + "/" + json_name + ".json"
@@ -266,11 +266,11 @@ async def echo(bot, update):
             elif format_ext in Config.AUDIO_FORMATS:
             	  ikeyboard = [
                     InlineKeyboardButton(
-                        "🎧 audio " + format_ext + " " + approx_file_size,
+                        "🎧 audio - " + format_ext + " " + approx_file_size,
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📄 file " + format_ext + " " + approx_file_size,
+                        "📄 file - " + format_ext + " " + approx_file_size,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ]
