@@ -14,7 +14,6 @@ from . import googledrive
 from . import fembed
 from . import mediafire
 import lk21
-from helper_funcs.display_progress import humanbytes
 
 @Clinton.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
@@ -84,14 +83,12 @@ async def dl_fembed(bot, message):
         soup = BeautifulSoup(req.content, "html.parser")
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
-        filesize = req.headers["Content-Length"]
         for item in response_fembed:
             formats.append({
                 "id": item_id,
                 "title": filename,
                 "format": item["key"].split("/")[0],
                 "ext": item["key"].split("/")[1],
-                "filesize": filesize,
                 "url": item["value"]
             })
             item_id += 1
@@ -113,18 +110,18 @@ async def dl_fembed(bot, message):
         cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
-                "🎥 video " + item["format"] + " " + humanbytes(int(item["filesize"])),
+                "🎥 video " + item["format"],
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file " + item["ext"] + " " + humanbytes(int(item["filesize"])),
+                "📄 file " + item["ext"],
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
     try:
         await info_msg.edit_text(
             Translation.FORMAT_SELECTION,
-            reply_markup=InlineKeyboardMarkup(inline_keyboard),
+            reply_markup=InlineKeyboardMarkup(inline_keyboard)
         )
     except Exception as e:
         await info_msg.edit_text(
