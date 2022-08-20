@@ -16,8 +16,8 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 async def echo(bot, message):
     await AddUser(bot, message)
     info_msg = await message.reply_text(
-    	  "<b>Processing...⏳</b>", 
-    	  quote=True
+        "<b>Processing...⏳</b>", 
+        quote=True
     )
     youtube_dl_username = None
     youtube_dl_password = None
@@ -239,11 +239,13 @@ async def echo(bot, message):
             if format_ext in Config.VIDEO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎥 video - " + format_ext + " " + humanbytes(int(total_length)),
+                        #"🎥 video - " + format_ext + " " + humanbytes(int(total_length)),
+                        "🎥 video - " + format_ext + " " + int(total_length),
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📃 file - " + format_ext + " " + humanbytes(int(total_length)),
+                        #"📃 file - " + format_ext + " " + humanbytes(int(total_length)),
+                        "📃 file - " + format_ext + " " + int(total_length),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
