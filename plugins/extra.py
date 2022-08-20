@@ -14,6 +14,7 @@ from . import googledrive
 from . import fembed
 from . import mediafire
 import lk21
+from helper_funcs.display_progress import humanbytes
 
 @Clinton.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
@@ -79,7 +80,7 @@ async def dl_fembed(bot, message):
     formats = []
     item_id = 0
     try:
-        req = requests.get(url)
+        req = requests.get(url, stream=True)
         soup = BeautifulSoup(req.content, "html.parser")
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
@@ -112,11 +113,11 @@ async def dl_fembed(bot, message):
         cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
-                "🎥 video " + item["format"] + " " + item["filesize"],
+                "🎥 video " + item["format"] + " " + humanbytes(int(item["filesize"])),
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file " + item["ext"] + " " + item["filesize"],
+                "📄 file " + item["ext"] + " " + humanbytes(int(item["filesize"])),
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
