@@ -93,7 +93,7 @@ async def echo(bot, message):
     await info_msg.edit_text(
         "<b>Processing...⌛</b>"
     )
-    time.sleep(1)
+    time.sleep(0.5)
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
     # https://github.com/rg3/youtube-dl/issues/2630#issuecomment-38635239
@@ -179,7 +179,7 @@ async def echo(bot, message):
                     if format_ext in Config.VIDEO_FORMATS:
                     	  ikeyboard = [
                             InlineKeyboardButton(
-                                "🎥 video " + format_string,
+                                "🎥 video " + format_ext,
                                 callback_data=(cb_string_video).encode("UTF-8")
                             ),
                             InlineKeyboardButton(
@@ -199,7 +199,7 @@ async def echo(bot, message):
                             )
                         ]
                     else:
-                  	    ikeyboard = [
+                        ikeyboard = [
                             InlineKeyboardButton(
                                 "📄 file " + format_ext + " " + approx_file_size,
                                 callback_data=(cb_string_file).encode("UTF-8")
@@ -232,22 +232,6 @@ async def echo(bot, message):
                 return
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
-            """
-            cb_string_file = "{}|{}|{}|{}".format(
-                "file", format_id, format_ext, json_name)
-            cb_string_video = "{}|{}|{}|{}".format(
-                "video", format_id, format_ext, json_name)
-            inline_keyboard.append([
-                InlineKeyboardButton(
-                    "🎥 video - " + format_ext,
-                    callback_data=(cb_string_video).encode("UTF-8")
-                ),
-                InlineKeyboardButton(
-                    "📄 file - " + format_ext,
-                    callback_data=(cb_string_file).encode("UTF-8")
-                )
-            ])
-            """
             cb_string_file = "{}={}={}={}".format(
                 "file", format_id, format_ext, json_name)
             cb_string_video = "{}={}={}={}".format(
