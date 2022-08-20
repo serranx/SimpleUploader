@@ -17,14 +17,14 @@ import lk21
 
 @Clinton.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
-    custom_filename = None
+    custom_file_name = None
     info_msg = await message.reply_text(
         "<b>Processing...⏳</b>", 
         quote=True
     )
     if " * " in message.text:
         try:
-            url, custom_filename = message.text.split(" * ")
+            url, custom_file_name = message.text.split(" * ")
         except:
             await info_msg.edit_text(
                 Translation.INCORRECT_REQUEST
@@ -41,16 +41,16 @@ async def dl_googledrive(bot, message):
         response_gd = await googledrive.get(url)
     except:
         await info_msg.edit_text(
-            text=Translation.NO_FILE_FOUND
+            Translation.NO_FILE_FOUND
         )
         return
     file_title = response_gd["title"]
     ext = response_gd["ext"]
-    if custom_filename is not None:
-        if custom_filename.endswith("." + ext):
-            filename = custom_filename
+    if custom_file_name is not None:
+        if custom_file_name.endswith("." + ext):
+            filename = custom_file_name
         else:
-            filename = custom_filename + "." + ext
+            filename = custom_file_name + "." + ext
     else:
         filename = file_title
     if ext in Config.VIDEO_FORMATS:
@@ -80,21 +80,23 @@ async def dl_fembed(bot, message):
     item_id = 0
     try:
         req = requests.get(url)
-        soup = BeautifulSoup(req.content, 'html.parser')
+        soup = BeautifulSoup(req.content, "html.parser")
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
+        filesize = req.headers["Content-Length"]
         for item in response_fembed:
             formats.append({
                 "id": item_id,
                 "title": filename,
                 "format": item["key"].split("/")[0],
                 "ext": item["key"].split("/")[1],
+                "filesize": filesize,
                 "url": item["value"]
             })
             item_id += 1
-    except:
+    except Exception as e:
         await info_msg.edit_text(
-            text=Translation.NO_FILE_FOUND
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
         )
         return
     inline_keyboard = []
@@ -110,38 +112,35 @@ async def dl_fembed(bot, message):
         cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
-                "🎥 video " + item["format"],
+                "🎥 video " + item["format"] + " " + item["filesize"],
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file " + item["ext"],
+                "📄 file " + item["ext"] + " " + item["filesize"],
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
     try:
         await info_msg.edit_text(
-            text=Translation.FORMAT_SELECTION,
+            Translation.FORMAT_SELECTION,
             reply_markup=InlineKeyboardMarkup(inline_keyboard),
-            parse_mode="html"
         )
     except Exception as e:
-        await info_msg.delete(True)
-        await message.reply_text(
-            text=str(e),
-            quote=True
+        await info_msg.edit_text(
+            str(e)
         )
         return
     
 @Clinton.on_message(filters.regex(pattern="mediafire.com/"))
 async def dl_mediafire(bot, message):
-    custom_filename = None
+    custom_file_name = None
     info_msg = await message.reply_text(
         "<b>Processing... ⏳</b>",
         quote=True
     )
     if " * " in message.text:
         try:
-            url, custom_filename = message.text.split(" * ")
+            url, custom_file_name = message.text.split(" * ")
         except:
             await info_msg.edit_text(
                 Translation.INCORRECT_REQUEST
@@ -162,13 +161,13 @@ async def dl_mediafire(bot, message):
         )
         return
     ext = filename.split(".")[-1]
-    if custom_filename is not None:
-        if "\n" in custom_filename:
-            filename = custom_filename.split("\n")[0]
-        if custom_filename.endswith("." + ext):
-            filename = custom_filename
+    if custom_file_name is not None:
+        if "\n" in custom_file_name:
+            filename = custom_file_name.split("\n")[0]
+        if custom_file_name.endswith("." + ext):
+            filename = custom_file_name
         else:
-            filename = custom_filename + "." + ext
+            filename = custom_file_name + "." + ext
     if ext in Config.VIDEO_FORMATS:
         send_type = "video"
     elif ext in Config.AUDIO_FORMATS:
