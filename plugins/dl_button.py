@@ -192,8 +192,7 @@ async def download_coroutine(info_msg, session, url, file_name, start):
                     percentage = downloaded * 100 / total_length
                     speed = downloaded / diff
                     elapsed_time = round(diff) * 1000
-                    time_to_completion = round(
-                        (total_length - downloaded) / speed) * 1000
+                    time_to_completion = round((total_length - downloaded) / speed) * 1000
                     estimated_total_time = elapsed_time + time_to_completion
                     try:
                         current_message = "<b>Downloading to my server... 📥</b>\n" + Translation.DISPLAY_PROGRESS.format(
@@ -211,7 +210,6 @@ async def download_coroutine(info_msg, session, url, file_name, start):
                                 current_message
                             )
                             display_message = current_message
-                            time.sleep(0.5)
                     except Exception as e:
                         #logger.info(str(e))
                         pass
