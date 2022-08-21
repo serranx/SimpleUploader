@@ -36,9 +36,9 @@ Ex: <a href='https://telegra.ph/file/198bcda5944f787373122.jpg'>See This!</a> �
     FORMAT_SELECTION = """<b>If you haven't set <a href='{}'>a thumbnail</a> before you can send a photo now. If you don't want to don't worry - You will get an auto genarated thumbnail from the video to your upload 😎</b>
     
 👇𝗦𝗲𝗹𝗲𝗰𝘁 𝗔𝗻𝗱 𝗖𝗵𝗼𝘀𝗲 𝗬𝗼𝘂𝗿 𝗙𝗼𝗿𝗺𝗮𝘁👇
-(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option)
+(If your link is a video and if you want it as a streamable video select a video option. If you want your upload in document format select a file option).
 
-<b>Don't select other format options if it shows any!</b>"""
+<b>Make sure that the format you select is no larger than 2 GB.</b>"""
     SET_CUSTOM_USERNAME_PASSWORD = """If you want to download premium videos, provide in the following format:
 URL | filename | username | password"""
     DOWNLOAD_START = """<b>File detected:</b> {}
