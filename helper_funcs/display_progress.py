@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import math, os, time, shutil
+import math, os, time, shutil, requests
 from config import Config
 from translation import Translation
 
@@ -38,6 +38,10 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
         except Exception as e:
             #logger.info(str(e))
             pass
+
+def ContentLength(url):
+    filesize = requests.get(url, stream=True).headers["Content-Length"]
+    return humanbytes(filesize)
 
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
