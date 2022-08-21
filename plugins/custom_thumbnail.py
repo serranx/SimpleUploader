@@ -6,7 +6,7 @@ import random, os, time
 from PIL import Image
 from config import Config
 from translation import Translation
-from pyrogram import Client as Clinton
+from pyrogram import Client
 from database.access import clinton
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
@@ -15,7 +15,7 @@ from pyrogram import filters
 from database.adduser import AddUser
 from helper_funcs.help_Nekmo_ffmpeg import take_screen_shot
 
-@Clinton.on_message(filters.private & filters.photo)
+@Client.on_message(filters.private & filters.photo)
 async def save_photo(bot, message):
     await AddUser(bot, message)
     await clinton.set_thumbnail(message.from_user.id, thumbnail=message.photo.file_id)
@@ -24,7 +24,7 @@ async def save_photo(bot, message):
         quote=True
     )
 
-@Clinton.on_message(filters.private & filters.command("delthumbnail"))
+@Client.on_message(filters.private & filters.command("delthumbnail"))
 async def delthumbnail(bot, message):
     await AddUser(bot, message)
     thumbnail = await clinton.get_thumbnail(message.from_user.id)
@@ -40,7 +40,7 @@ async def delthumbnail(bot, message):
             quote=True
         )
 
-@Clinton.on_message(filters.private & filters.command("viewthumbnail") )
+@Client.on_message(filters.private & filters.command("viewthumbnail") )
 async def viewthumbnail(bot, message):
     await AddUser(bot, message)
     thumbnail = await clinton.get_thumbnail(message.from_user.id)
