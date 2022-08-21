@@ -41,8 +41,9 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
 
 async def ContentLength(url):
     session = aiohttp.ClientSession()
-    response = session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT)
-    filesize = int(response.headers["Content-Length"])
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        filesize = int(response.headers["Content-Length"])
+        await response.release()
     #filesize = requests.get(url, stream=True).headers["Content-Length"]
     return humanbytes(filesize)
 
