@@ -13,10 +13,10 @@ from pyrogram import Client
 from helper_funcs.display_progress import humanbytes, ContentLength
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-@Client.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz"))
+@Client.on_message(filters.private & filters.regex(pattern=".*http.*"))
 async def echo(bot, message):
     await AddUser(bot, message)
-    imog = await message.reply_text("<b>Processing... ⏳</b>", quote=True)
+    info_msg = await message.reply_text("<b>Processing... ⏳</b>", quote=True)
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
@@ -88,29 +88,20 @@ async def echo(bot, message):
     )
     # Wait for the subprocess to finish
     stdout, stderr = await process.communicate()
-    await bot.edit_message_text(
-        text="<b>Processing... ⌛</b>",
-        chat_id=message.chat.id,
-        message_id=imog.message_id
-    )
+    await info_msg.edit_text("<b>Processing... ⌛</b>")
     time.sleep(0.5)
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
     # https://github.com/rg3/youtube-dl/issues/2630#issuecomment-38635239
     if e_response and "nonnumeric port" not in e_response:
-        # logger.warn("Status : FAIL", exc.returncode, exc.output)
         error_message = e_response.replace("please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U", "")
         if "This video is only available for registered users." in error_message:
             error_message += Translation.SET_CUSTOM_USERNAME_PASSWORD
-        await imog.delete(True)
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
-            reply_to_message_id=message.message_id,
-            parse_mode="html",
+        await info_msg.edit_text(
+            Translation.NO_VOID_FORMAT_FOUND.format(str(error_message)),
             disable_web_page_preview=True
         )
-        return False
+        return
     if t_response:
         x_reponse = t_response
         if "\n" in x_reponse:
@@ -229,15 +220,11 @@ async def echo(bot, message):
             try:
                 total_length = await ContentLength(url)
             except Exception as e:
-                await imog.delete(True)
-                await bot.send_message(
-                    chat_id=message.chat.id,
-                    text=Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
-                    reply_to_message_id=message.message_id,
-                    parse_mode="html",
+                await info_msg.edit_text(
+                    Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
                     disable_web_page_preview=True
                 )
-                return False
+                return
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
@@ -274,13 +261,9 @@ async def echo(bot, message):
                     )
                 ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await imog.delete(True)
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=Translation.FORMAT_SELECTION,
-            reply_markup=reply_markup,
-            parse_mode="html",
-            reply_to_message_id=message.message_id
+        await info_msg.edit_text(
+            Translation.FORMAT_SELECTION,
+            reply_markup=reply_markup
         )
     else:
         # fallback for nonnumeric port a.k.a seedbox.io
@@ -300,11 +283,7 @@ async def echo(bot, message):
             )
         ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
-        await imog.delete(True)
-        await bot.send_message(
-            chat_id=message.chat.id,
-            text=Translation.FORMAT_SELECTION,
-            reply_markup=reply_markup,
-            parse_mode="html",
-            reply_to_message_id=message.message_id
+        await info_msg.edit_text(
+            Translation.FORMAT_SELECTION,
+            reply_markup=reply_markup
         )
