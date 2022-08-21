@@ -17,13 +17,6 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 async def echo(bot, message):
     await AddUser(bot, message)
     imog = await message.reply_text("<b>Processing... ⏳</b>", quote=True)
-    if os.path.exists(Config.DOWNLOAD_LOCATION + str(message.chat.id) + ".json"):
-        await bot.edit_message_text(
-            text=Translation.WAIT_PROCESS_FINISH,
-            chat_id=message.chat.id,
-            message_id=imog.message_id
-        )
-        return False
     youtube_dl_username = None
     youtube_dl_password = None
     file_name = None
@@ -153,28 +146,68 @@ async def echo(bot, message):
                 cb_string_file = "{}|{}|{}|{}".format(
                     "file", format_id, format_ext, json_name)
                 if format_string is not None and not "audio only" in format_string:
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "🎥 video " + format_string + " " + approx_file_size,
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "📄 file " + format_ext + " " + approx_file_size,
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
-                    ]
+                    if re.match("(http(s)?):\/\/(www\.)?youtu(be)?\.(com|be)", url) and re.match("storyboard|ultralow|low|medium", format_string):
+                        continue
+                    if format_ext in Config.VIDEO_FORMATS:
+                        ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎥 video " + format_string + " " + approx_file_size,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    elif format_ext in Config.AUDIO_FORMATS:
+                        ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎧 audio " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    else:
+                        ikeyboard = [
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext + " " + approx_file_size,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
                 else:
                     # special weird case :\
-                    ikeyboard = [
-                        InlineKeyboardButton(
-                            "🎥 video - " + format_ext,
-                            callback_data=(cb_string_video).encode("UTF-8")
-                        ),
-                        InlineKeyboardButton(
-                            "📄 file - " + format_ext,
-                            callback_data=(cb_string_file).encode("UTF-8")
-                        )
-                    ]
+                    if format_ext in Config.VIDEO_FORMATS:
+                        ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎥 video " + format_ext,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    elif format_ext in Config.AUDIO_FORMATS:
+                        ikeyboard = [
+                            InlineKeyboardButton(
+                                "🎧 audio " + format_ext,
+                                callback_data=(cb_string_video).encode("UTF-8")
+                            ),
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
+                    else:
+                        ikeyboard = [
+                            InlineKeyboardButton(
+                                "📄 file " + format_ext,
+                                callback_data=(cb_string_file).encode("UTF-8")
+                            )
+                        ]
                 inline_keyboard.append(ikeyboard)
             if duration is not None:
                 cb_string_64 = "{}|{}|{}|{}".format("audio", "64k", "mp3", json_name)
@@ -191,22 +224,52 @@ async def echo(bot, message):
                         "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
+            total_length = ""
+            try:
+                total_length = requests.get(url, stream=True).headers["Content-Length"]
+            except Exception as e:
+                await bot.edit_message_text(
+                    Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
+                    disable_web_page_preview=True
+                    chat_id=message.chat.id,
+                    message_id=imog.message_id
+                )
+                return
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
                 "file", format_id, format_ext, json_name)
             cb_string_video = "{}={}={}={}".format(
                 "video", format_id, format_ext, json_name)
-            inline_keyboard.append([
-                InlineKeyboardButton(
-                    "🎥 video - " + format_ext,
-                    callback_data=(cb_string_video).encode("UTF-8")
-                ),
-                InlineKeyboardButton(
-                    "📃 file - " + format_ext,
-                    callback_data=(cb_string_file).encode("UTF-8")
-                )
-            ])
+            if format_ext in Config.VIDEO_FORMATS:
+                inline_keyboard.append([
+                    InlineKeyboardButton(
+                        "🎥 video - " + format_ext + " ~" + humanbytes(int(total_length)),
+                        callback_data=(cb_string_video).encode("UTF-8")
+                    ),
+                    InlineKeyboardButton(
+                        "📃 file - " + format_ext + " ~" + humanbytes(int(total_length)),
+                        callback_data=(cb_string_file).encode("UTF-8")
+                    )
+                ])
+            elif format_ext in Config.AUDIO_FORMATS:
+                ikeyboard = [
+                    InlineKeyboardButton(
+                        "🎧 audio - " + format_ext + " ~" + humanbytes(int(total_length)),
+                        callback_data=(cb_string_video).encode("UTF-8")
+                    ),
+                    InlineKeyboardButton(
+                        "📄 file - " + format_ext + " ~" + humanbytes(int(total_length)),
+                        callback_data=(cb_string_file).encode("UTF-8")
+                    )
+                ]
+            else:
+                inline_keyboard.append([
+                    InlineKeyboardButton(
+                        "📃 file - " + format_ext + " ~" + humanbytes(int(total_length)),
+                        callback_data=(cb_string_file).encode("UTF-8")
+                    )
+                ])
         reply_markup = InlineKeyboardMarkup(inline_keyboard)
         await imog.delete(True)
         await bot.send_message(
