@@ -7,15 +7,16 @@ from bs4 import BeautifulSoup
 from config import Config
 from translation import Translation
 from pyrogram import filters
-from pyrogram import Client as Clinton
+from pyrogram import Client
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from helper_funcs.display_progress import ContentLength
 from . import googledrive
 from . import fembed
 from . import mediafire
 import lk21
 
-@Clinton.on_message(filters.regex(pattern="drive.google.com"))
+@Client.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
     custom_file_name = None
     info_msg = await message.reply_text(
@@ -62,7 +63,7 @@ async def dl_googledrive(bot, message):
     message.data = "{}|{}|{}".format(send_type, url, filename)
     await googledrive.download(bot, message, info_msg)
 
-@Clinton.on_message(filters.regex(pattern="fembed.com|fembed-hd.com|femax20.com|vanfem.com|suzihaza.com|embedsito.com|owodeuwu.xyz|plusto.link"))
+@Client.on_message(filters.regex(pattern="fembed.com|fembed-hd.com|femax20.com|vanfem.com|suzihaza.com|embedsito.com|owodeuwu.xyz|plusto.link"))
 async def dl_fembed(bot, message):
     info_msg = await message.reply_text(
         "<b>Processing... ⏳</b>", 
@@ -84,11 +85,13 @@ async def dl_fembed(bot, message):
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
         for item in response_fembed:
+            filesize = ContentLength(item["value"])
             formats.append({
                 "id": item_id,
                 "title": filename,
                 "format": item["key"].split("/")[0],
                 "ext": item["key"].split("/")[1],
+                "filesize": filesize,
                 "url": item["value"]
             })
             item_id += 1
@@ -110,11 +113,11 @@ async def dl_fembed(bot, message):
         cb_string_file = "{}|{}|{}|{}".format("fembed", "file", item["id"], json_name)
         inline_keyboard.append([
             InlineKeyboardButton(
-                "🎥 video " + item["format"],
+                "🎥 video " + item["format"] + " " + item["filesize"],
                 callback_data=(cb_string_video).encode("UTF-8")
             ),
             InlineKeyboardButton(
-                "📄 file " + item["ext"],
+                "📄 file " + item["ext"] + " " + item["filesize"],
                 callback_data=(cb_string_file).encode("UTF-8")
             )
         ])
@@ -129,7 +132,7 @@ async def dl_fembed(bot, message):
         )
         return
     
-@Clinton.on_message(filters.regex(pattern="mediafire.com/"))
+@Client.on_message(filters.regex(pattern="mediafire.com/"))
 async def dl_mediafire(bot, message):
     custom_file_name = None
     info_msg = await message.reply_text(
