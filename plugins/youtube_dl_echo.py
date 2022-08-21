@@ -224,6 +224,7 @@ async def echo(bot, message):
                         "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
+            total_length = ContentLength(url)
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
@@ -233,29 +234,29 @@ async def echo(bot, message):
             if format_ext in Config.VIDEO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎥 video " + format_ext + " ~" + ContentLength(url),
+                        "🎥 video " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + ContentLength(url),
+                        "📃 file " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
             elif format_ext in Config.AUDIO_FORMATS:
-                ikeyboard = [
+                inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎧 audio " + format_ext + " ~" + ContentLength(url),
+                        "🎧 audio " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📄 file " + format_ext + " ~" + ContentLength(url),
+                        "📄 file " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
-                ]
+                ])
             else:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + ContentLength(url),
+                        "📃 file " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
