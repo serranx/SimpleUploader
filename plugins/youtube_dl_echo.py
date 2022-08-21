@@ -209,8 +209,8 @@ async def echo(bot, message):
                                 callback_data=(cb_string_file).encode("UTF-8")
                             )
                         ]
-                inline_keyboard.append(ikeyboard)
                 """
+                inline_keyboard.append(ikeyboard)
             if duration is not None:
                 cb_string_64 = "{}|{}|{}|{}".format("audio", "64k", "mp3", json_name)
                 cb_string_128 = "{}|{}|{}|{}".format("audio", "128k", "mp3", json_name)
