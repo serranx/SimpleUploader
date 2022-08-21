@@ -225,7 +225,6 @@ async def echo(bot, message):
                 ])
         else:
             try:
-                #total_length = 0
                 total_length = await ContentLength(url)
             except Exception as e:
                 await imog.delete(True)
@@ -246,29 +245,29 @@ async def echo(bot, message):
             if format_ext in Config.VIDEO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎥 video " + format_ext + " ~" + str(total_length),
+                        "🎥 video " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + str(total_length),
+                        "📃 file " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
             elif format_ext in Config.AUDIO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎧 audio " + format_ext + " ~" + str(total_length),
+                        "🎧 audio " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📄 file " + format_ext + " ~" + str(total_length),
+                        "📄 file " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
             else:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + str(total_length),
+                        "📃 file " + format_ext + " ~" + total_length,
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
