@@ -225,6 +225,7 @@ async def echo(bot, message):
                 ])
         else:
             try:
+                #total_length = 0
                 total_length = await ContentLength(url)
             except Exception as e:
                 await imog.delete(True)
@@ -236,7 +237,6 @@ async def echo(bot, message):
                     disable_web_page_preview=True
                 )
                 return False
-            total_length = 0
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
