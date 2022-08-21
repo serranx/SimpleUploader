@@ -235,29 +235,29 @@ async def echo(bot, message):
             if format_ext in Config.VIDEO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎥 video " + format_ext + " ~" + total_length,
+                        "🎥 video " + format_ext + " ~" + str(total_length),
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + total_length,
+                        "📃 file " + format_ext + " ~" + str(total_length),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
             elif format_ext in Config.AUDIO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎧 audio " + format_ext + " ~" + total_length,
+                        "🎧 audio " + format_ext + " ~" + str(total_length),
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📄 file " + format_ext + " ~" + total_length,
+                        "📄 file " + format_ext + " ~" + str(total_length),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
             else:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + total_length,
+                        "📃 file " + format_ext + " ~" + str(total_length),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
