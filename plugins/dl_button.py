@@ -43,8 +43,11 @@ async def ddl_call_back(bot, message):
                 l = entity.length
                 youtube_dl_url = youtube_dl_url[o:o + l]
     
-    description = custom_file_name
-    if not "." + youtube_dl_ext in custom_file_name:
+    if len(custom_file_name.split(".")) > 1:
+        description = custom_file_name.split("." + youtube_dl_ext)[0]
+    else:
+        description = custom_file_name
+    if not "unknown" in youtube_dl_ext and not custom_file_name.endswith("." + youtube_dl_ext):
         custom_file_name += '.' + youtube_dl_ext
     logger.info(youtube_dl_url)
     logger.info(custom_file_name)
