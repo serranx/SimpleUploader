@@ -91,7 +91,7 @@ async def dl_fembed(bot, message):
                 "title": filename,
                 "format": item["key"].split("/")[0],
                 "ext": item["key"].split("/")[1],
-                "filesize": filesize,
+                "filesize": str(filesize),
                 "url": item["value"]
             })
             item_id += 1
@@ -100,6 +100,7 @@ async def dl_fembed(bot, message):
             Translation.NO_FILE_FOUND + "\n\n" + str(e)
         )
         return
+    print (formats)
     inline_keyboard = []
     json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
