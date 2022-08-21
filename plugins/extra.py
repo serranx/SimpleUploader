@@ -91,7 +91,7 @@ async def dl_fembed(bot, message):
                 "title": filename,
                 "format": item["key"].split("/")[0],
                 "ext": item["key"].split("/")[1],
-                "filesize": str(filesize),
+                "filesize": filesize,
                 "url": item["value"]
             })
             item_id += 1
