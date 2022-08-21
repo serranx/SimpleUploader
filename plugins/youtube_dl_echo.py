@@ -230,7 +230,7 @@ async def echo(bot, message):
             except Exception as e:
                 await bot.edit_message_text(
                     Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
-                    disable_web_page_preview=True
+                    disable_web_page_preview=True,
                     chat_id=message.chat.id,
                     message_id=imog.message_id
                 )
