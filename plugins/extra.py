@@ -85,7 +85,7 @@ async def dl_fembed(bot, message):
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
         for item in response_fembed:
-            filesize = ContentLength(item["value"])
+            filesize = await ContentLength(item["value"])
             formats.append({
                 "id": item_id,
                 "title": filename,
