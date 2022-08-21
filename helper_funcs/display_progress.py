@@ -43,8 +43,7 @@ async def ContentLength(url):
     session = aiohttp.ClientSession()
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
         filesize = int(response.headers["Content-Length"])
-        await response.release()
-    #filesize = requests.get(url, stream=True).headers["Content-Length"]
+        await session.close()
     return humanbytes(filesize)
 
 def humanbytes(size):
