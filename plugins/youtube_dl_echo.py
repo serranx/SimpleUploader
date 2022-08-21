@@ -224,7 +224,8 @@ async def echo(bot, message):
                         "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
-            total_length = ContentLength(url)
+            #total_length = ContentLength(url)
+            total_length = 0
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
