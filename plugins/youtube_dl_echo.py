@@ -224,7 +224,18 @@ async def echo(bot, message):
                         "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
-            #total_length = ContentLength(url)
+            try:
+                total_length = await ContentLength(url)
+            except Exception as e:
+                await imog.delete(True)
+                await bot.send_message(
+                    chat_id=message.chat.id,
+                    text=Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
+                    reply_to_message_id=message.message_id,
+                    parse_mode="html",
+                    disable_web_page_preview=True
+                )
+                return False
             total_length = 0
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
