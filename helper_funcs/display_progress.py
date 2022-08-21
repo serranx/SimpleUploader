@@ -39,7 +39,7 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
             #logger.info(str(e))
             pass
 
-def ContentLength(url):
+async def ContentLength(url):
     filesize = requests.get(url, stream=True).headers["Content-Length"]
     return humanbytes(filesize)
 
