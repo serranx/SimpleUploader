@@ -1,15 +1,16 @@
 
+
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, re, time, asyncio, json, random, string, requests
+import os, re, time, asyncio, json, random, string
 from config import Config
 from database.adduser import AddUser
 from translation import Translation
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from pyrogram import filters
 from pyrogram import Client
-from helper_funcs.display_progress import humanbytes
+from helper_funcs.display_progress import humanbytes, ContentLength
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 @Client.on_message(filters.private & filters.regex(pattern=".*http.*") & ~filters.regex(pattern="\.mediafire\.com") & ~filters.regex(pattern="fembed\.com|fembed-hd\.com|femax20\.com|vanfem\.com|suzihaza\.com|owodeuwu\.xyz"))
@@ -223,17 +224,6 @@ async def echo(bot, message):
                         "🎧 MP3 (320 kbps)", callback_data=cb_string.encode("UTF-8"))
                 ])
         else:
-            total_length = ""
-            try:
-                total_length = requests.get(url, stream=True).headers["Content-Length"]
-            except Exception as e:
-                await bot.edit_message_text(
-                    Translation.NO_VOID_FORMAT_FOUND.format(str(e)),
-                    disable_web_page_preview=True,
-                    chat_id=message.chat.id,
-                    message_id=imog.message_id
-                )
-                return
             format_id = response_json["format_id"]
             format_ext = response_json["ext"]
             cb_string_file = "{}={}={}={}".format(
@@ -243,29 +233,29 @@ async def echo(bot, message):
             if format_ext in Config.VIDEO_FORMATS:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "🎥 video " + format_ext + " ~" + humanbytes(int(total_length)),
+                        "🎥 video " + format_ext + " ~" + ContentLength(url),
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + humanbytes(int(total_length)),
+                        "📃 file " + format_ext + " ~" + ContentLength(url),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
             elif format_ext in Config.AUDIO_FORMATS:
                 ikeyboard = [
                     InlineKeyboardButton(
-                        "🎧 audio " + format_ext + " ~" + humanbytes(int(total_length)),
+                        "🎧 audio " + format_ext + " ~" + ContentLength(url),
                         callback_data=(cb_string_video).encode("UTF-8")
                     ),
                     InlineKeyboardButton(
-                        "📄 file " + format_ext + " ~" + humanbytes(int(total_length)),
+                        "📄 file " + format_ext + " ~" + ContentLength(url),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ]
             else:
                 inline_keyboard.append([
                     InlineKeyboardButton(
-                        "📃 file " + format_ext + " ~" + humanbytes(int(total_length)),
+                        "📃 file " + format_ext + " ~" + ContentLength(url),
                         callback_data=(cb_string_file).encode("UTF-8")
                     )
                 ])
