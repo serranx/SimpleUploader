@@ -39,6 +39,16 @@ async def progress_for_pyrogram(current, total, ud_type, message, filename, star
             #logger.info(str(e))
             pass
 
+async def ContentDisposition(url):
+    session = aiohttp.ClientSession()
+    filename = None
+    async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
+        if "filename=" in response.headers["Content-Disposition"]:
+            filename = response.headers["Content-Disposition"].split("filename=")[-1]∆.replace("\"", "")
+        filesize = int(response.headers["Content-Length"])
+        await session.close()
+    return filename, humanbytes(filesize)
+
 async def ContentLength(url):
     session = aiohttp.ClientSession()
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
