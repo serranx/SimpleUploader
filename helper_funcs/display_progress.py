@@ -44,7 +44,7 @@ async def ContentDisposition(url):
     filename = None
     async with session.get(url, timeout=Config.PROCESS_MAX_TIMEOUT) as response:
         if "filename=" in response.headers["Content-Disposition"]:
-            filename = response.headers["Content-Disposition"].split("filename=")[-1]∆.replace("\"", "")
+            filename = response.headers["Content-Disposition"].split("filename=")[-1].replace("\"", "")
         filesize = int(response.headers["Content-Length"])
         await session.close()
     return filename, humanbytes(filesize)
