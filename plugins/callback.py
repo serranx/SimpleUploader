@@ -6,16 +6,16 @@ from plugins.dl_button import ddl_call_back
 from . import fembed
 
 @Clinton.on_callback_query(filters.regex('^X0$'))
-async def delt(bot, update):
-    await update.message.delete(True)
+async def delt(bot, message):
+    await message.message.delete(True)
 
 @Clinton.on_callback_query()
-async def button(bot, update):
-    cb_data = update.data
+async def button(bot, message):
+    cb_data = message.data
     if "|" in cb_data:
         if "fembed" in cb_data.split("|")[0]:
-            await fembed.download(bot, update)
+            await fembed.download(bot, message)
         else:
-            await youtube_dl_call_back(bot, update)
+            await youtube_dl_call_back(bot, message)
     elif "=" in cb_data:
-        await ddl_call_back(bot, update)
+        await ddl_call_back(bot, message)
