@@ -23,7 +23,10 @@ async def get(url):
     req = requests.get(url, stream=True)
     soup = BeautifulSoup(req.content, "html.parser")
     dl_url = soup.find("a", id="downloadButton").get("href")
-    filename = soup.find("div", class_="filename").get_text()
+    try:
+        filename = soup.find("div", class_="filename").get_text()
+    except:
+        filename = soup.find("div", class_="dl-btn-label").get("title")
     return dl_url, filename
     
 async def download(bot, message, info_msg):
