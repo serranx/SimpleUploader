@@ -152,7 +152,8 @@ async def youtube_dl_call_back(bot, update):
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
-        except FileNotFoundError as exc:
+        #except FileNotFoundError as exc:
+        except:
             _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
             download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
             try:
