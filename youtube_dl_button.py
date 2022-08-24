@@ -154,9 +154,9 @@ async def youtube_dl_call_back(bot, update):
             file_size = os.stat(download_directory).st_size
         #except FileNotFoundError as exc:
         except:
-            _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
-            download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
             try:
+                _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
+                download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
                 os.rename(_download_directory, download_directory)
             except:
                 await bot.edit_message_text(
