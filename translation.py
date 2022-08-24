@@ -53,6 +53,9 @@ Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
 <b>🔸File detected:</b> <i>{}</i>
 <b>🔸Downloaded:</b> <i>in {} seconds</i>
 <b>🔸Detected file size:</b> <i>{}</i>"""
+    UNKNOWN_ERROR = """<b>❗UNKNOWN ERROR❗</b>
+I don't know what just happened 🙃
+But I'm going to find out and fix it as soon as possible 🧐"""
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
     AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<i>✅ Downloaded <b>in {} seconds</b></i>
 <i>✅ Uploaded <b>in {} seconds</b></i>"""
