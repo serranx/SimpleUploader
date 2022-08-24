@@ -155,7 +155,15 @@ async def youtube_dl_call_back(bot, update):
         except FileNotFoundError as exc:
             _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
             download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
-            os.rename(_download_directory, download_directory)
+            try:
+                os.rename(_download_directory, download_directory)
+            except:
+                await bot.edit_message_text(
+                    text=Translation.UNKNOWN_ERROR,
+                    chat_id=update.message.chat.id,
+                    message_id=update.message.message_id
+                )
+                return
             file_size = os.stat(download_directory).st_size
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
