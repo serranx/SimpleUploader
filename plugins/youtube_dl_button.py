@@ -25,7 +25,7 @@ async def youtube_dl_call_back(bot, update):
         )
         return
     youtube_dl_url = update.message.reply_to_message.text
-    custom_file_name = str(response_json.get("title"))[:50]
+    custom_file_name = str(response_json.get("title"))[:60]
     youtube_dl_username = None
     youtube_dl_password = None
     if " * " in youtube_dl_url:
@@ -63,7 +63,10 @@ async def youtube_dl_call_back(bot, update):
                 l = entity.length
                 youtube_dl_url = youtube_dl_url[o:o + l]
     
-    description = custom_file_name
+    if len(custom_file_name.split(".")) > 1:
+        description = custom_file_name.split("." + youtube_dl_ext)[0]
+    else:
+        description = custom_file_name
     if not "unknown" in youtube_dl_ext and not "." + youtube_dl_ext in custom_file_name:
         custom_file_name += '.' + youtube_dl_ext
     logger.info(youtube_dl_url)
@@ -149,11 +152,20 @@ async def youtube_dl_call_back(bot, update):
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
-        except FileNotFoundError as exc:
-            _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
-            download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
-            os.rename(_download_directory, download_directory)
-            file_size = os.stat(download_directory).st_size
+        #except FileNotFoundError as exc:
+        except:
+            try:
+                _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
+                download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
+                os.rename(_download_directory, download_directory)
+                file_size = os.stat(download_directory).st_size
+            except:
+                await bot.edit_message_text(
+                    text=Translation.UNKNOWN_ERROR,
+                    chat_id=update.message.chat.id,
+                    message_id=update.message.message_id
+                )
+                return
         if file_size > Config.TG_MAX_FILE_SIZE:
             await bot.edit_message_text(
                 chat_id=update.message.chat.id,
