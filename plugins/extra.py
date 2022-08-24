@@ -156,9 +156,9 @@ async def dl_mediafire(bot, message):
         url = url.split("?dkey=")[0]
     try:
         dl_url, filename = await mediafire.get(url)
-    except:
+    except Exception as e:
         await info_msg.edit_text(
-            Translation.NO_FILE_FOUND
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
         )
         return
     ext = filename.split(".")[-1]
