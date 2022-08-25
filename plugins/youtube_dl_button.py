@@ -7,8 +7,8 @@ from datetime import datetime
 from config import Config
 from translation import Translation
 from plugins.custom_thumbnail import *
-logging.getLogger("pyrogram").setLevel(logging.WARNING)
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 async def youtube_dl_call_back(bot, message):
     cb_data = message.data
@@ -17,7 +17,7 @@ async def youtube_dl_call_back(bot, message):
     try:
         with open(save_ytdl_json_path, "r", encoding="utf8") as f:
             response_json = json.load(f)
-    except (FileNotFoundError) as e:
+    except FileNotFoundError as e:
         await bot.delete_messages(
             chat_id=message.message.chat.id,
             message_ids=message.message.message_id,
@@ -72,7 +72,7 @@ async def youtube_dl_call_back(bot, message):
     logger.info(youtube_dl_url)
     logger.info(custom_file_name)
     
-    await bot.edit_message_text(
+    info_msg = await bot.edit_message_text(
         text=Translation.DOWNLOAD_START.format(custom_file_name),
         chat_id=message.message.chat.id,
         message_id=message.message.message_id
@@ -136,13 +136,11 @@ async def youtube_dl_call_back(bot, message):
     stdout, stderr = await process.communicate()
     e_response = stderr.decode().strip()
     t_response = stdout.decode().strip()
-    ad_string_to_replace = "please report this issue on https://yt-dl.org/bug . Make sure you are using the latest version; see  https://yt-dl.org/update  on how to update. Be sure to call youtube-dl with the --verbose flag and include its complete output."
+    ad_string_to_replace = "please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U"
     if e_response and ad_string_to_replace in e_response:
         error_message = e_response.replace(ad_string_to_replace, "")
-        await bot.edit_message_text(
-            chat_id=message.message.chat.id,
-            message_id=message.message.message_id,
-            text=error_message
+        await info_msg.edit_text(
+            error_message
         )
         return
     if t_response:
@@ -152,33 +150,26 @@ async def youtube_dl_call_back(bot, message):
         file_size = Config.TG_MAX_FILE_SIZE + 1
         try:
             file_size = os.stat(download_directory).st_size
-        #except FileNotFoundError as exc:
-        except:
+        except FileNotFoundError as e:
             try:
                 _download_directory = tmp_directory_for_each_user + "/" + custom_file_name + "." + "mkv"
                 download_directory = tmp_directory_for_each_user + "/" + description + "." + "mkv"
                 os.rename(_download_directory, download_directory)
                 file_size = os.stat(download_directory).st_size
             except:
-                await bot.edit_message_text(
-                    text=Translation.UNKNOWN_ERROR,
-                    chat_id=message.message.chat.id,
-                    message_id=message.message.message_id
+                await info_msg.edit_text(
+                    Translation.UNKNOWN_ERROR
                 )
                 return
         if file_size > Config.TG_MAX_FILE_SIZE:
-            await bot.edit_message_text(
-                chat_id=message.message.chat.id,
-                text=Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size)),
-                message_id=message.message.message_id
+            await info_msg.edit_text(
+                Translation.RCHD_TG_API_LIMIT.format(custom_file_name, time_taken_for_download, humanbytes(file_size))
             )
             os.remove(download_directory)
             return
         else:
-            await bot.edit_message_text(
-                text=Translation.UPLOAD_START,
-                chat_id=message.message.chat.id,
-                message_id=message.message.message_id
+            await info_msg.edit_text(
+                Translation.UPLOAD_START
             )
             start_time = time.time()
             # try to upload file
@@ -249,10 +240,8 @@ async def youtube_dl_call_back(bot, message):
                 os.remove(thumbnail)
             except:
                 pass
-            await bot.edit_message_text(
-                text=Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
-                chat_id=message.message.chat.id,
-                message_id=message.message.message_id,
+            await info_msg.edit_text(
+                Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload),
                 disable_web_page_preview=True
             )
             logger.info("✅ " + custom_file_name)
