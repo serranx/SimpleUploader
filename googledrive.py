@@ -6,7 +6,6 @@ import os, time, asyncio, json
 from config import Config
 from datetime import datetime
 from translation import Translation
-from helper_funcs.display_progress import humanbytes
 from helper_funcs.display_progress import progress_for_pyrogram, humanbytes, TimeFormatter
 from plugins.custom_thumbnail import *
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
