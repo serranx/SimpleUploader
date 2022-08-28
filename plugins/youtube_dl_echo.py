@@ -135,7 +135,9 @@ async def echo(bot, message):
                     "video", format_id, format_ext, json_name)
                 cb_string_file = "{}|{}|{}|{}".format(
                     "file", format_id, format_ext, json_name)
-                if format_string != "" and format_string is not None and not "audio only" in format_string and not "DASH" in format_string:
+                if format_string is not None and not "audio only" in format_string:
+                    if format_string == "" or format_string == " " or "DASH" format_string:
+                        continue
                     if re.match("(http(s)?):\/\/(www\.)?youtu(be)?\.(com|be)", url) and re.match("storyboard|ultralow|low|medium", format_string):
                         continue
                     if format_ext in Config.VIDEO_FORMATS:
