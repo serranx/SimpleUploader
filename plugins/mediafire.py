@@ -1,10 +1,5 @@
 
-import requests
-import asyncio
-import aiohttp
-import os
-import time
-import math
+import os, requests, asyncio, aiohttp, time, math
 from datetime import datetime
 from bs4 import BeautifulSoup
 from config import Config
