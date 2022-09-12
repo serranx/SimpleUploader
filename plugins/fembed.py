@@ -38,7 +38,6 @@ async def download(bot, message):
     description = custom_file_name.split("." + youtube_dl_ext)[0]
     logger.info(youtube_dl_url)
     logger.info(custom_file_name)
-    start = datetime.now()
     info_msg = await bot.edit_message_text(
         chat_id=message.message.chat.id,
         message_id=message.message.message_id,
@@ -50,6 +49,7 @@ async def download(bot, message):
     download_directory = tmp_directory_for_each_user + "/" + custom_file_name
     command_to_exec = []
     async with aiohttp.ClientSession() as session:
+        start = datetime.now()
         c_time = time.time()
         try:
             await download_coroutine(
