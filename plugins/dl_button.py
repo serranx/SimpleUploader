@@ -52,7 +52,6 @@ async def ddl_call_back(bot, message):
     logger.info(youtube_dl_url)
     logger.info(custom_file_name)
     
-    start = datetime.now()
     info_msg = await bot.edit_message_text(
         text=Translation.DOWNLOAD_START.format(custom_file_name),
         chat_id=message.message.chat.id,
@@ -64,6 +63,7 @@ async def ddl_call_back(bot, message):
     download_directory = tmp_directory_for_each_user + "/" + custom_file_name
     command_to_exec = []
     async with aiohttp.ClientSession() as session:
+        start = datetime.now()
         c_time = time.time()
         try:
             await download_coroutine(
