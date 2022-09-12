@@ -28,13 +28,13 @@ async def download(bot, message, info_msg):
     cb_data = message.data
     send_type, dl_url, filename = cb_data.split("|")
     description = filename.split("." + filename.split(".")[-1])[0]
-    start = datetime.now()
     tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + filename
     command_to_exec = []
     async with aiohttp.ClientSession() as session:
+        start = datetime.now()
         c_time = time.time()
         try:
             await download_coroutine(
