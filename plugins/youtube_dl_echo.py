@@ -169,39 +169,6 @@ async def echo(bot, message):
                                 callback_data=(cb_string_file).encode("UTF-8")
                             )
                         ]
-                """
-                else:
-                    # special weird case :\
-                    if format_ext in Config.VIDEO_FORMATS:
-                        ikeyboard = [
-                            InlineKeyboardButton(
-                                "🎥 video " + format_ext,
-                                callback_data=(cb_string_video).encode("UTF-8")
-                            ),
-                            InlineKeyboardButton(
-                                "📄 file " + format_ext,
-                                callback_data=(cb_string_file).encode("UTF-8")
-                            )
-                        ]
-                    elif format_ext in Config.AUDIO_FORMATS:
-                        ikeyboard = [
-                            InlineKeyboardButton(
-                                "🎧 audio " + format_ext,
-                                callback_data=(cb_string_video).encode("UTF-8")
-                            ),
-                            InlineKeyboardButton(
-                                "📄 file " + format_ext,
-                                callback_data=(cb_string_file).encode("UTF-8")
-                            )
-                        ]
-                    else:
-                        ikeyboard = [
-                            InlineKeyboardButton(
-                                "📄 file " + format_ext,
-                                callback_data=(cb_string_file).encode("UTF-8")
-                            )
-                        ]
-                """
                     inline_keyboard.append(ikeyboard)
             if duration is not None:
                 cb_string_64 = "{}|{}|{}|{}".format("audio", "64k", "mp3", json_name)
