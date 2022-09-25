@@ -57,8 +57,8 @@ Sorry. I cannot upload files greater than 2GB due to Telegram API limitations.
 I don't know what just happened 🙃
 But I'm going to find out and fix it as soon as possible 🧐"""
     AFTER_SUCCESSFUL_UPLOAD_MSG = "👍 Thanks for using @SimpleUploaderBot."
-    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<i>✅ Downloaded <b>in {} seconds</b></i>
-<i>✅ Uploaded <b>in {} seconds</b></i>"""
+    AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS = """<i>✅ Downloaded in <b>{} seconds</b></i>
+<i>✅ Uploaded in <b>{} seconds</b></i>"""
     SAVED_CUSTOM_THUMB_NAIL = "✅ Custom video/file thumbnail saved. This image will be used in the video/file."
     DEL_ETED_CUSTOM_THUMB_NAIL = "✅ Custom thumbnail cleared succesfully."
     CUSTOM_CAPTION_UL_FILE = "{}"
