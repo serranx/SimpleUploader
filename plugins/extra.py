@@ -63,7 +63,7 @@ async def dl_googledrive(bot, message):
     message.data = "{}|{}|{}".format(send_type, url, filename)
     await googledrive.download(bot, message, info_msg)
 
-@Client.on_message(filters.regex(pattern="fembed.com|fembed-hd.com|femax20.com|vanfem.com|suzihaza.com|embedsito.com|owodeuwu.xyz|plusto.link"))
+@Client.on_message(filters.regex(pattern="fembed.com|fembed-hd.com|femax20.com|vanfem.com|suzihaza.com|embedsito.com|owodeuwu.xyz|plusto.link|watchse.icu"))
 async def dl_fembed(bot, message):
     info_msg = await message.reply_text(
         "<b>Processing... ⏳</b>", 
