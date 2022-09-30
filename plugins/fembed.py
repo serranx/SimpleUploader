@@ -65,9 +65,10 @@ async def download(bot, message):
             )
             return
     if os.path.exists(download_directory):
+        end_one = datetime.now()
+        time_taken_for_download = (end_one - start).seconds
         if os.path.exists(save_ytdl_json_path):
             os.remove(save_ytdl_json_path)
-        end_one = datetime.now()
         await info_msg.edit_text(
             Translation.UPLOAD_START
         )
@@ -146,7 +147,6 @@ async def download(bot, message):
                 os.remove(thumb_image_path)
             except:
                 pass
-            time_taken_for_download = (end_one - start).seconds
             time_taken_for_upload = (end_two - end_one).seconds
             await info_msg.edit_text(
                 Translation.AFTER_SUCCESSFUL_UPLOAD_MSG_WITH_TS.format(time_taken_for_download, time_taken_for_upload)
