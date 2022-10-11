@@ -16,6 +16,19 @@ from . import fembed
 from . import mediafire
 import lk21
 
+@Client.on_message(filters.command("lk21"))
+async def lk21_test(bot, message):
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    bypasser = lk21.Bypass()
+    try:
+        response = bypasser.bypass_url(message.text.split(" ")[-1])
+        await message.edit_text(str(response))
+    except Exception as e:
+        await message.edit_text(str(e))
+
 @Client.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
     custom_file_name = None
