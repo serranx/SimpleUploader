@@ -15,7 +15,7 @@ async def ddl_call_back(bot, message):
     tg_send_type, youtube_dl_format, youtube_dl_ext, json_name = cb_data.split("=")
     youtube_dl_url = message.message.reply_to_message.text
     thumb_image_path = Config.DOWNLOAD_LOCATION + \
-         str(message.from_user.id) + "/" + json_name + ".jpg"
+         str(message.chat.id) + "/" + json_name + ".jpg"
     custom_file_name = os.path.basename(youtube_dl_url)
     if " * " in youtube_dl_url:
         url_parts = youtube_dl_url.split(" * ")
@@ -57,7 +57,7 @@ async def ddl_call_back(bot, message):
         chat_id=message.message.chat.id,
         message_id=message.message.message_id
     )
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     download_directory = tmp_directory_for_each_user + "/" + custom_file_name
