@@ -13,13 +13,13 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 async def youtube_dl_call_back(bot, message):
     cb_data = message.data
     tg_send_type, youtube_dl_format, youtube_dl_ext, json_name = cb_data.split("|")
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(message.chat.id) + "/" + json_name + ".json"
+    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(message.from_user.id) + "/" + json_name + ".json"
     try:
         with open(save_ytdl_json_path, "r", encoding="utf8") as f:
             response_json = json.load(f)
     except FileNotFoundError as e:
         await bot.delete_messages(
-            chat_id=message.message.chat.id,
+            chat_id=message.message.from_user.id,
             message_ids=message.message.message_id,
             revoke=True
         )
@@ -74,11 +74,11 @@ async def youtube_dl_call_back(bot, message):
     
     info_msg = await bot.edit_message_text(
         text=Translation.DOWNLOAD_START.format(custom_file_name),
-        chat_id=message.message.chat.id,
+        chat_id=message.message.from_user.id,
         message_id=message.message.message_id
     )
 
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.chat.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     if "/" in custom_file_name:
@@ -177,7 +177,7 @@ async def youtube_dl_call_back(bot, message):
                 duration = await Mdata03(download_directory)
                 thumbnail = await Gthumb01(bot, message)
                 await bot.send_audio(
-                    chat_id=message.message.chat.id,
+                    chat_id=message.message.from_user.id,
                     audio=download_directory,
                     caption=description,
                     parse_mode="HTML",
@@ -195,7 +195,7 @@ async def youtube_dl_call_back(bot, message):
             elif tg_send_type == "file":
                 thumbnail = await Gthumb01(bot, message)
                 await bot.send_document(
-                    chat_id=message.message.chat.id,
+                    chat_id=message.message.from_user.id,
                     document=download_directory,
                     thumb=thumbnail,
                     caption=description,
@@ -213,7 +213,7 @@ async def youtube_dl_call_back(bot, message):
                  width, height, duration = await Mdata01(download_directory)
                  thumbnail = await Gthumb02(bot, message, duration, download_directory)
                  await bot.send_video(
-                    chat_id=message.message.chat.id,
+                    chat_id=message.message.from_user.id,
                     video=download_directory,
                     caption=description,
                     parse_mode="HTML",
