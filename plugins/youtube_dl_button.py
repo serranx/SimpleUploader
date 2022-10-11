@@ -177,7 +177,7 @@ async def youtube_dl_call_back(bot, message):
                 duration = await Mdata03(download_directory)
                 thumbnail = await Gthumb01(bot, message)
                 await bot.send_audio(
-                    chat_id=message.message.from_user.id,
+                    chat_id=message.message.chat.id,
                     audio=download_directory,
                     caption=description,
                     parse_mode="HTML",
@@ -195,7 +195,7 @@ async def youtube_dl_call_back(bot, message):
             elif tg_send_type == "file":
                 thumbnail = await Gthumb01(bot, message)
                 await bot.send_document(
-                    chat_id=message.message.from_user.id,
+                    chat_id=message.message.chat.id,
                     document=download_directory,
                     thumb=thumbnail,
                     caption=description,
@@ -213,7 +213,7 @@ async def youtube_dl_call_back(bot, message):
                  width, height, duration = await Mdata01(download_directory)
                  thumbnail = await Gthumb02(bot, message, duration, download_directory)
                  await bot.send_video(
-                    chat_id=message.message.from_user.id,
+                    chat_id=message.message.chat.id,
                     video=download_directory,
                     caption=description,
                     parse_mode="HTML",
