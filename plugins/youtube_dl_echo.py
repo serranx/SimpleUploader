@@ -12,7 +12,7 @@ from helper_funcs.display_progress import humanbytes, ContentLength
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-@Client.on_message(filters.private & filters.regex(pattern=".*http.*"))
+@Client.on_message(filters.regex(pattern=".*http.*"))
 async def echo(bot, message):
     await AddUser(bot, message)
     info_msg = await message.reply_text("<b>Processing... ⏳</b>", quote=True)
@@ -107,7 +107,7 @@ async def echo(bot, message):
             x_reponse, _ = x_reponse.split("\n")
         response_json = json.loads(x_reponse)
         json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
+        tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.chat.id)
         if not os.path.isdir(tmp_directory_for_each_user):
             os.makedirs(tmp_directory_for_each_user)
         save_ytdl_json_path = tmp_directory_for_each_user + "/" + json_name + ".json"
