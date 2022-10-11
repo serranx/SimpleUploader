@@ -102,7 +102,7 @@ async def dl_fembed(bot, message):
         return
     inline_keyboard = []
     json_name = "".join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     save_ytdl_json_path = tmp_directory_for_each_user + "/" + json_name + ".json"
