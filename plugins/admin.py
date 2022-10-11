@@ -4,7 +4,7 @@ from pyrogram import filters
 from config import Config
 from database.access import clinton
 
-@Client.on_message(filters.private & filters.command('total'))
+@Client.on_message(filters.command('total'))
 async def stats(bot, message):
     if message.from_user.id != Config.OWNER_ID:
         return 
