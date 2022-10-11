@@ -18,7 +18,7 @@ from helper_funcs.help_Nekmo_ffmpeg import take_screen_shot
 @Client.on_message(filters.private & filters.photo)
 async def save_photo(bot, message):
     await AddUser(bot, message)
-    await clinton.set_thumbnail(message.from_user.id, thumbnail=message.photo.file_id)
+    await clinton.set_thumbnail(message.chat.id, thumbnail=message.photo.file_id)
     await message.reply_text(
         Translation.SAVED_CUSTOM_THUMB_NAIL,
         quote=True
@@ -27,9 +27,9 @@ async def save_photo(bot, message):
 @Client.on_message(filters.private & filters.command("delthumbnail"))
 async def delthumbnail(bot, message):
     await AddUser(bot, message)
-    thumbnail = await clinton.get_thumbnail(message.from_user.id)
+    thumbnail = await clinton.get_thumbnail(message.chat.id)
     if thumbnail is not None:
-        await clinton.set_thumbnail(message.from_user.id, thumbnail=None)
+        await clinton.set_thumbnail(message.chat.id, thumbnail=None)
         await message.reply_text(
             Translation.DEL_ETED_CUSTOM_THUMB_NAIL,
             quote=True
@@ -43,7 +43,7 @@ async def delthumbnail(bot, message):
 @Client.on_message(filters.private & filters.command("viewthumbnail") )
 async def viewthumbnail(bot, message):
     await AddUser(bot, message)
-    thumbnail = await clinton.get_thumbnail(message.from_user.id)
+    thumbnail = await clinton.get_thumbnail(message.chat.id)
     if thumbnail is not None:
         await message.reply_photo(
             photo=thumbnail,
@@ -57,8 +57,8 @@ async def viewthumbnail(bot, message):
         )
 
 async def Gthumb01(bot, message):
-    thumb_image_path = Config.DOWNLOAD_LOCATION + str(message.from_user.id) + ".jpg"
-    db_thumbnail = await clinton.get_thumbnail(message.from_user.id)
+    thumb_image_path = Config.DOWNLOAD_LOCATION + str(message.chat.id) + ".jpg"
+    db_thumbnail = await clinton.get_thumbnail(message.chat.id)
     if db_thumbnail is not None:
         thumbnail = await bot.download_media(message=db_thumbnail, file_name=thumb_image_path)
         Image.open(thumbnail).convert("RGB").save(thumbnail)
@@ -70,8 +70,8 @@ async def Gthumb01(bot, message):
     return thumbnail
 
 async def Gthumb02(bot, message, duration, download_directory):
-    thumb_image_path = Config.DOWNLOAD_LOCATION + str(message.from_user.id) + ".jpg"
-    db_thumbnail = await clinton.get_thumbnail(message.from_user.id)
+    thumb_image_path = Config.DOWNLOAD_LOCATION + str(message.chat.id) + ".jpg"
+    db_thumbnail = await clinton.get_thumbnail(message.chat.id)
     if duration == 0:
         duration = 1
     if db_thumbnail is not None:
