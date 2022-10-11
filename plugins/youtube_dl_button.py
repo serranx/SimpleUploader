@@ -13,7 +13,7 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 async def youtube_dl_call_back(bot, message):
     cb_data = message.data
     tg_send_type, youtube_dl_format, youtube_dl_ext, json_name = cb_data.split("|")
-    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(message.from_user.id) + "/" + json_name + ".json"
+    save_ytdl_json_path = Config.DOWNLOAD_LOCATION + str(message.chat.id) + "/" + json_name + ".json"
     try:
         with open(save_ytdl_json_path, "r", encoding="utf8") as f:
             response_json = json.load(f)
@@ -78,7 +78,7 @@ async def youtube_dl_call_back(bot, message):
         message_id=message.message.message_id
     )
 
-    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.chat.id)
     if not os.path.isdir(tmp_directory_for_each_user):
         os.makedirs(tmp_directory_for_each_user)
     if "/" in custom_file_name:
