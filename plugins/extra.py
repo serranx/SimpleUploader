@@ -25,9 +25,34 @@ async def lk21_test(bot, message):
     bypasser = lk21.Bypass()
     try:
         response = bypasser.bypass_url(message.text.split(" ")[-1])
-        await message.edit_text(str(response))
+        await info_msg.edit_text(str(response))
     except Exception as e:
-        await message.edit_text(str(e))
+        await info_msg.edit_text(str(e))
+
+@Client.on_message(filters.regex(pattern="streamtape.com"))
+async def dl_streamtape(bot, message):
+    custom_file_name = None
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
+            )
+            return
+    else:
+        url = message.text
+    try:
+        req = requests.get(url, stream=True)
+        soup = BeautifulSoup(req.content, "html.parser")
+        dl_url = soup.find("div", id="ideoolink").get_text()
+        await info_msg.edit_text(str(dl_url))
+    except Exception as e:
+        await info_msg.edit_text(str(e))
 
 @Client.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
