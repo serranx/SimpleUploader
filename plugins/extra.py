@@ -29,7 +29,7 @@ async def lk21_test(bot, message):
     except Exception as e:
         await info_msg.edit_text(str(e))
 
-@Client.on_message(filters.regex(pattern="streamtape.com"))
+@Client.on_message(filters.regex(pattern="streamtape.com/e/"))
 async def dl_streamtape(bot, message):
     custom_file_name = None
     info_msg = await message.reply_text(
