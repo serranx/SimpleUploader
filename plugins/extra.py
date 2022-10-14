@@ -50,9 +50,11 @@ async def dl_streamtape(bot, message):
         custom_file_name = "video.mp4"
     try:
         dl_url = await streamtape.get_download_url(url)
+        if custom_file_name != "video.mp4":
+            custom_file_name = os.path.basename(dl_url)
     except Exception as e:
         await info_msg.edit_text(
-            Translation.NO_FILE_FOUND + "\n\n" + str(e)
+            Translation.NO_FILE_FOUND + "\n\n" + str(e) + "\n\n" + "Link example: <code>https://streamtape.com/e/2rKKdYGyxpiZ31G</code>"
         )
         return
     message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
