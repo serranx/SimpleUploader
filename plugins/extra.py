@@ -14,6 +14,7 @@ from helper_funcs.display_progress import ContentLength
 from . import googledrive
 from . import fembed
 from . import mediafire
+from . import streamtape
 import lk21
 
 @Client.on_message(filters.command("lk21"))
@@ -46,13 +47,16 @@ async def dl_streamtape(bot, message):
             return
     else:
         url = message.text
-    raw = requests.get(url)
-    if re.findall(r"document.*((?=id\=)[^']+)", raw.text):
-        videolink = re.findall(r"document.*((?=id\=)[^']+)", raw.text)
-        nexturl = "https://streamtape.com/get_video?" + videolink[-3]
-    head = requests.head(nexturl)
-    await info_msg.edit_text(str(head.headers.get("Location", nexturl)))
-
+        custom_file_name = "video.mp4"
+    try:
+        dl_url = await streamtape.get_download_url(url)
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
+        )
+        return
+    message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
+    await streamtape.download(bot, message, info_msg)
 """
 @Client.on_message(filters.regex(pattern="streamtape.com/e/"))
 async def dl_streamtape(bot, message):
