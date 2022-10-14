@@ -29,6 +29,33 @@ async def lk21_test(bot, message):
     except Exception as e:
         await info_msg.edit_text(str(e))
 
+@Client.on_message(filters.regex(pattern="streamtape.com"))
+async def dl_streamtape(bot, message):
+    custom_file_name = None
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
+            )
+            return
+    else:
+        url = message.text
+    raw = requests.get(url)
+
+    if re.findall(r"document.*((?=id\=)[^\"']+)", raw.text):
+    videolink = re.findall(r"document.*((?=id\=)[^\"']+)", raw.text)
+    nexturl = "https://streamtape.com/get_video?" + videolink[-3]
+
+    head = requests.head(nexturl)
+    await info_msg.edit_text(str(head.headers.get("Location", nexturl)))
+
+"""
 @Client.on_message(filters.regex(pattern="streamtape.com/e/"))
 async def dl_streamtape(bot, message):
     custom_file_name = None
@@ -46,14 +73,23 @@ async def dl_streamtape(bot, message):
             return
     else:
         url = message.text
+    if len(url.split("/")) == 5:
+        url = "https://streamtape.com/v/" + url.split("/")[-1] + "/video.mp4"
+    elif len(url.split("/")) == 6:
+        if not url.endswith(".mp4"):
+            url = url + "video.mp4"
+    else:
+        await info_msg.edit_text(
+            Translation.INCORRECT_REQUEST
+        )
+        return
+    bypasser = lk21.Bypass()
     try:
-        req = requests.get(url, stream=True)
-        soup = BeautifulSoup(req.content, "html.parser")
-        dl_url = soup.find("div", id="ideoolink").get_text()
-        await info_msg.edit_text(str(dl_url))
+        response = bypasser.bypass_streamtape(url)
+        await info_msg.edit_text(str(response))
     except Exception as e:
         await info_msg.edit_text(str(e))
-
+"""
 @Client.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
     custom_file_name = None
