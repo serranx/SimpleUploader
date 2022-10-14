@@ -9,4 +9,4 @@ requests
 tgcrypto
 aiofiles
 bs4
-lk21
+git+https://github.com/zevtyardt/lk21@main#egg=lk21
