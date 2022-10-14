@@ -47,11 +47,9 @@ async def dl_streamtape(bot, message):
     else:
         url = message.text
     raw = requests.get(url)
-
     if re.findall(r"document.*((?=id\=)[^\"']+)", raw.text):
     videolink = re.findall(r"document.*((?=id\=)[^\"']+)", raw.text)
     nexturl = "https://streamtape.com/get_video?" + videolink[-3]
-
     head = requests.head(nexturl)
     await info_msg.edit_text(str(head.headers.get("Location", nexturl)))
 
