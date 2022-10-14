@@ -6,10 +6,11 @@ I'm <b>Simple Uploader Bot! ✨</b>
 
 1. MP4
 2. some M3U8 links
-3. YouTube links
-4. Mediafire links
-5. Google Drive links (if link is public)
-6. Fembed links (<code>fembed.com</code> domain)
+3. YouTube
+4. Mediafire
+5. Google Drive (if link is public)
+6. Fembed (<code>fembed.com</code> domain)
+7. Streamtape (beta)
 and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for other links will be added soon.</i>
