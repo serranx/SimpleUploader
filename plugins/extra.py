@@ -84,6 +84,8 @@ async def dl_1fichier(bot, message):
         soup = BeautifulSoup(raw.text, "html.parser")
         if custom_file_name is None:
             custom_file_name = soup.findAll("td", class_="normal")[1].get_text()
+        else:
+            custom_file_name += "." + soup.findAll("td", class_="normal")[1].get_text().split(".")[-1]
         raw = requests.post(url, stream=True)
         soup = BeautifulSoup(raw.text, "html.parser")
         dl_url = soup.find("a", class_="ok").get("href")
