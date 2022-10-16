@@ -82,14 +82,21 @@ async def dl_1fichier(bot, message):
     try:
         raw = requests.get(url, stream=True)
         soup = BeautifulSoup(raw.text, "html.parser")
+        ext = soup.findAll("td", class_="normal")[1].get_text().split(".")[-1]
         if custom_file_name is None:
             custom_file_name = soup.findAll("td", class_="normal")[1].get_text()
         else:
-            custom_file_name += "." + soup.findAll("td", class_="normal")[1].get_text().split(".")[-1]
+            custom_file_name += "." + ext
         raw = requests.post(url, stream=True)
         soup = BeautifulSoup(raw.text, "html.parser")
         dl_url = soup.find("a", class_="ok").get("href")
-        message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
+        if ext in Config.VIDEO_FORMATS:
+            send_type = "video"
+        elif ext in Config.AUDIO_FORMATS:
+            send_type = "audio"
+        else:
+            send_type = "file"
+        message.data = "{}|{}|{}".format(send_type, dl_url, custom_file_name)
         await streamtape.download(bot, message, info_msg)
     except Exception as e:
         await info_msg.edit_text(
