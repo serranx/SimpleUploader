@@ -51,6 +51,8 @@ async def dl_streamtape(bot, message):
         dl_url = await streamtape.get_download_url(url)
         if custom_file_name is None:
             custom_file_name = os.path.basename(dl_url)
+        else:
+            custom_file_name += "." + os.path.basename(dl_url).split(".")[-1]
     except Exception as e:
         await info_msg.edit_text(
             Translation.NO_FILE_FOUND + "\n\n" + str(e) + "\n\n" + "Link example: \n<code>https://streamtape.com/e/2rKKdYGyxpiZ31G</code>"
@@ -77,15 +79,21 @@ async def dl_1fichier(bot, message):
             return
     else:
         url = message.text
-    filename = requests.get(url, stream=True)
-    soup = BeautifulSoup(filename.text, "html.parser")
-    if custom_file_name is None:
-        custom_file_name = soup.findAll("td", class_="normal")[1].get_text()
-    raw = requests.post(url, stream=True)
-    soup = BeautifulSoup(raw.text, "html.parser")
-    dl_url = soup.find("a", class_="ok").get("href")
-    message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
-    await streamtape.download(bot, message, info_msg)
+    try:
+        filename = requests.get(url, stream=True)
+        soup = BeautifulSoup(filename.text, "html.parser")
+        if custom_file_name is None:
+            custom_file_name = soup.findAll("td", class_="normal")[1].get_text()
+        raw = requests.post(url, stream=True)
+        soup = BeautifulSoup(raw.text, "html.parser")
+        dl_url = soup.find("a", class_="ok").get("href")
+        message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
+        await streamtape.download(bot, message, info_msg)
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e)
+        )
+        return
 
 @Client.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
