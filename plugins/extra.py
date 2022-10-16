@@ -80,8 +80,8 @@ async def dl_1fichier(bot, message):
     else:
         url = message.text
     try:
-        filename = requests.get(url, stream=True)
-        soup = BeautifulSoup(filename.text, "html.parser")
+        raw = requests.get(url, stream=True)
+        soup = BeautifulSoup(raw.text, "html.parser")
         if custom_file_name is None:
             custom_file_name = soup.findAll("td", class_="normal")[1].get_text()
         raw = requests.post(url, stream=True)
