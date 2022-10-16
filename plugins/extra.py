@@ -47,10 +47,9 @@ async def dl_streamtape(bot, message):
             return
     else:
         url = message.text
-        custom_file_name = "video.mp4"
     try:
         dl_url = await streamtape.get_download_url(url)
-        if custom_file_name == "video.mp4":
+        if custom_file_name is None:
             custom_file_name = os.path.basename(dl_url)
     except Exception as e:
         await info_msg.edit_text(
@@ -81,7 +80,7 @@ async def dl_1fichier(bot, message):
     filename = requests.get(url, stream=True)
     soup = BeautifulSoup(filename.text, "html.parser")
     if custom_file_name is None:
-        custom_file_name = soup.findAll("td", class_="normal")[1].get_text())
+        custom_file_name = soup.findAll("td", class_="normal")[1].get_text()
     raw = requests.post(url, stream=True)
     soup = BeautifulSoup(raw.text, "html.parser")
     dl_url = soup.find("a", class_="ok").get("href")
