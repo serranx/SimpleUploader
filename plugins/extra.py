@@ -59,9 +59,10 @@ async def dl_streamtape(bot, message):
         return
     message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
     await streamtape.download(bot, message, info_msg)
-"""
-@Client.on_message(filters.regex(pattern="streamtape.com/e/"))
-async def dl_streamtape(bot, message):
+    
+@Client.on_message(filters.regex(pattern="1fichier.com"))
+async def dl_1fichier(bot, message):
+    #url = "https://1fichier.com/?erugwlxdya6vgzq58hse"
     custom_file_name = None
     info_msg = await message.reply_text(
         "<b>Processing...⏳</b>", 
@@ -77,23 +78,16 @@ async def dl_streamtape(bot, message):
             return
     else:
         url = message.text
-    if len(url.split("/")) == 5:
-        url = "https://streamtape.com/v/" + url.split("/")[-1] + "/video.mp4"
-    elif len(url.split("/")) == 6:
-        if not url.endswith(".mp4"):
-            url = url + "video.mp4"
-    else:
-        await info_msg.edit_text(
-            Translation.INCORRECT_REQUEST
-        )
-        return
-    bypasser = lk21.Bypass()
-    try:
-        response = bypasser.bypass_streamtape(url)
-        await info_msg.edit_text(str(response))
-    except Exception as e:
-        await info_msg.edit_text(str(e))
-"""
+    filename = requests.get(url, stream=True)
+    soup = BeautifulSoup(filename.text, "html.parser")
+    if custom_file_name is None:
+        custom_file_name = soup.findAll("td", class_="normal")[1].get_text())
+    raw = requests.post(url, stream=True)
+    soup = BeautifulSoup(raw.text, "html.parser")
+    dl_url = soup.find("a", class_="ok").get("href")
+    message.data = "{}|{}|{}".format("video", dl_url, custom_file_name)
+    await streamtape.download(bot, message, info_msg)
+
 @Client.on_message(filters.regex(pattern="drive.google.com"))
 async def dl_googledrive(bot, message):
     custom_file_name = None
