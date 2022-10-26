@@ -9,9 +9,7 @@ Telegram Bot to Upload Links.
 
 👉 Upload HTTP/HTTPS as File/Video to Telegram.
 
-👉 Upload mediafire, fembed links (fembed.com domain).
-
-👉 Upload zee5, sony.live, voot and much more.
+👉 Upload mediafire, streamtape, google drive, fembed links (fembed.com domain).
 
 👉 Permanent thumbnail Support.
 
