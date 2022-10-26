@@ -57,7 +57,6 @@ async def broadcast_(c, m):
     
     async with aiofiles.open('broadcast.txt', 'w') as broadcast_log_file:
         async for user in all_users:
-            
             sts, msg = await send_msg(
                 user_id = int(user['id']),
                 message = broadcast_msg
@@ -89,7 +88,6 @@ async def broadcast_(c, m):
     completed_in = datetime.timedelta(seconds=int(time.time()-start_time))
     
     await asyncio.sleep(3)
-    
     await out.delete()
     
     if failed == 0:
@@ -103,5 +101,4 @@ async def broadcast_(c, m):
             caption=f"broadcast completed in `{completed_in}`\n\nTotal users {total_users}.\nTotal done {done}, {success} success and {failed} failed.",
             quote=True
         )
-    
     await aiofiles.os.remove('broadcast.txt')
