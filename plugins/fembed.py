@@ -201,6 +201,5 @@ async def download_coroutine(info_msg, session, url, file_name, start):
                             display_message = current_message
                             #time.sleep(4.25)
                     except Exception as e:
-                        #logger.info(str(e))
                         pass
         return await response.release()
