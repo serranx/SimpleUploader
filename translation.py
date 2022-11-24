@@ -10,7 +10,7 @@ I'm <b>Simple Uploader Bot! ✨</b>
 4. Mediafire
 5. Google Drive (if link is public)
 6. Fembed (<code>fembed.com</code> domain)
-7. Streamtape (beta)
+7. Streamtape
 and many other direct links!... 🥳
     
 <i><b>Note:</b> Support for other links will be added soon.</i>
