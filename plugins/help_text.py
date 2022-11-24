@@ -13,6 +13,7 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 @Clinton.on_message(filters.private & filters.command(["files"]))
 async def test(bot, message):
+    #test
     if message.from_user.id != Config.OWNER_ID:
         return
     if len(message.text.split(" ")) == 2:
@@ -103,7 +104,7 @@ async def start(bot, update):
             [
                 [
                     InlineKeyboardButton("Source code ⚡", url="https://github.com/wywxz/SimpleUploaderBot"),
-                    InlineKeyboardButton("Developer 👨‍⚖️", url="https://t.me/SimpleBotsX"),
+                    InlineKeyboardButton("Developer 👨‍⚖️", url="https://t.me/SimpIeBots"),
                 ],
             ]
         ),
