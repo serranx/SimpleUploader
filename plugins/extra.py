@@ -15,20 +15,6 @@ from . import googledrive
 from . import fembed
 from . import mediafire
 from . import streamtape
-import lk21
-
-@Client.on_message(filters.command("lk21"))
-async def lk21_test(bot, message):
-    info_msg = await message.reply_text(
-        "<b>Processing...⏳</b>", 
-        quote=True
-    )
-    bypasser = lk21.Bypass()
-    try:
-        response = bypasser.bypass_url(message.text.split(" ")[-1])
-        await info_msg.edit_text(str(response))
-    except Exception as e:
-        await info_msg.edit_text(str(e))
 
 @Client.on_message(filters.regex(pattern="streamtape.com"))
 async def dl_streamtape(bot, message):
@@ -158,14 +144,14 @@ async def dl_fembed(bot, message):
         "<b>Processing... ⏳</b>", 
         quote=True
     )
-    bypasser = lk21.Bypass()
     if " * " in message.text:
         url = message.text.split(" * ")[0]
         url = "https://fembed.com/f/" + url.split("/")[-1]
+        api = "https://fembed.com/api/source/" + url.split("/")[-1]
     else:
         url = message.text
         url = "https://fembed.com/f/" + url.split("/")[-1]
-    response_fembed = bypasser.bypass_url(url)
+        api = "https://fembed.com/api/source/" + url.split("/")[-1]
     formats = []
     item_id = 0
     try:
@@ -173,15 +159,17 @@ async def dl_fembed(bot, message):
         soup = BeautifulSoup(req.content, "html.parser")
         filename = soup.find("h1", class_="title").get_text()
         filename = filename.split("." + filename.split(".")[-1])[0]
-        for item in response_fembed:
-            filesize = await ContentLength(item["value"])
+        req = requests.post(api).json()
+        for d in req["data"]:
+            file = d["file"]
+            filesize = await ContentLength(file)
             formats.append({
                 "id": item_id,
                 "title": filename,
-                "format": item["key"].split("/")[0],
-                "ext": item["key"].split("/")[1],
+                "format": d["label"],
+                "ext": d["type"],
                 "filesize": filesize,
-                "url": item["value"]
+                "url": file
             })
             item_id += 1
     except Exception as e:
