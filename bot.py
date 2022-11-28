@@ -2,7 +2,7 @@
 import os, asyncio
 from config import Config
 from pyrogram import Client as Clinton
-from .plugins import keepalive
+from plugins import keepalive
 
 if __name__ == "__main__" :
     asyncio.create_task(keepalive.ping_server())
