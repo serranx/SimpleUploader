@@ -2,7 +2,7 @@
 import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-import os, re, random, string, json, requests
+import os, re, random, string, json, requests, traceback
 from bs4 import BeautifulSoup
 from config import Config
 from translation import Translation
@@ -172,7 +172,9 @@ async def dl_fembed(bot, message):
                 "url": file
             })
             item_id += 1
+        await message.reply_text(str(formats))
     except Exception as e:
+        traceback.print_exc()
         await info_msg.edit_text(
             Translation.NO_FILE_FOUND + "\n\n" + str(e)
         )
