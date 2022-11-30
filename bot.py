@@ -4,7 +4,8 @@ from config import Config
 from pyrogram import Client as Clinton
 from plugins import keepalive
 
-if __name__ == "__main__" :
+async def start_services():
+    asyncio.create_task(keepalive.ping_server())
     # create download directory, if not exist
     if not os.path.isdir(Config.DOWNLOAD_LOCATION):
         os.makedirs(Config.DOWNLOAD_LOCATION)
@@ -16,4 +17,6 @@ if __name__ == "__main__" :
         plugins=plugins
     )
     Warrior.run()
-    asyncio.create_task(keepalive.ping_server())
+
+if __name__ == "__main__" :
+    asyncio.run(start_services())
