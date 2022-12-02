@@ -9,3 +9,4 @@ requests
 tgcrypto
 aiofiles
 bs4
+mega.py
