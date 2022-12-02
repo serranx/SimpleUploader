@@ -15,7 +15,42 @@ from . import googledrive
 from . import fembed
 from . import mediafire
 from . import streamtape
+from mega import Mega
 
+@Client.on_message(filters.regex(pattern="mega.io|mega.nz|mega.co.nz"))
+async def dl_mega(bot, message):
+    mega = Mega()
+    m = mega.login()
+    custom_file_name = None
+    tmp_directory_for_each_user = Config.DOWNLOAD_LOCATION + str(message.from_user.id)
+    info_msg = await message.reply_text(
+        "<b>Processing...⏳</b>", 
+        quote=True
+    )
+    if " * " in message.text:
+        try:
+            url, custom_file_name = message.text.split(" * ")
+        except:
+            await info_msg.edit_text(
+                Translation.INCORRECT_REQUEST
+            )
+            return
+    else:
+        url = message.text
+    try:
+        await info_msg.edit_text(
+            "Downloading..."
+        )
+        aux = m.download_url(url, tmp_directory_for_each_user)
+        await info_msg.edit_text(
+            "Downloading" + "\n\n" + str(aux)
+        )
+    except Exception as e:
+        await info_msg.edit_text(
+            Translation.NO_FILE_FOUND + "\n\n" + str(e) + "\n\n" + "Link example: \n<code>https://streamtape.com/e/2rKKdYGyxpiZ31G</code>"
+        )
+        return
+    
 @Client.on_message(filters.regex(pattern="streamtape.com"))
 async def dl_streamtape(bot, message):
     custom_file_name = None
