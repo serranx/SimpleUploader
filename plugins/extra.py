@@ -41,10 +41,7 @@ async def dl_mega(bot, message):
         await info_msg.edit_text(
             "Downloading..."
         )
-        aux = m.download_url(url, tmp_directory_for_each_user)
-        await info_msg.edit_text(
-            "Downloading" + "\n\n" + str(aux)
-        )
+        m.download_url(url, tmp_directory_for_each_user)
     except Exception as e:
         await info_msg.edit_text(
             Translation.NO_FILE_FOUND + "\n\n" + str(e) + "\n\n" + "Link example: \n<code>https://streamtape.com/e/2rKKdYGyxpiZ31G</code>"
